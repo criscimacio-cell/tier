@@ -22,17 +22,37 @@ class PinDetailSheet extends StatelessWidget {
     return '${(diff.inDays / 365).round()} years ago';
   }
 
-  List<Color> get _photoPlaceholders => [
-        const Color(0xFFE8D5B7),
-        const Color(0xFF1A535C).withOpacity(0.25),
-        const Color(0xFFFF6B6B).withOpacity(0.25),
-        const Color(0xFFB7D5E8),
-      ];
+  /// Generate a rich gradient for each photo card using the category color.
+  List<Color> _gradientForIndex(int i) {
+    final base = pin.category.color;
+    // Darken the base color for a gradient feel
+    final darkened = Color.fromARGB(
+      base.alpha,
+      (base.red * 0.55).round(),
+      (base.green * 0.55).round(),
+      (base.blue * 0.55).round(),
+    );
+    // Alternate slight hue variations to give each slide a unique feel
+    switch (i % 4) {
+      case 0:
+        return [base.withValues(alpha: 0.85), darkened];
+      case 1:
+        return [darkened, base.withValues(alpha: 0.7)];
+      case 2:
+        return [base.withValues(alpha: 0.6), darkened.withValues(alpha: 0.9)];
+      case 3:
+      default:
+        return [darkened.withValues(alpha: 0.8), base.withValues(alpha: 0.75)];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final sortedVisits = List<Visit>.from(pin.visits)
       ..sort((a, b) => b.date.compareTo(a.date));
+
+    // Use sortedVisits count for carousel, fall back to 4 min slides
+    final carouselCount = sortedVisits.isEmpty ? 1 : sortedVisits.length;
 
     return Container(
       decoration: const BoxDecoration(
@@ -59,59 +79,113 @@ class PinDetailSheet extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
                     child: SizedBox(
-                      height: 200,
+                      height: 220,
                       child: PageView.builder(
                         controller:
                             PageController(viewportFraction: 0.88),
-                        itemCount: _photoPlaceholders.length,
+                        itemCount: carouselCount,
                         itemBuilder: (_, i) {
+                          final visit =
+                              i < sortedVisits.length ? sortedVisits[i] : null;
+                          final gradientColors = _gradientForIndex(i);
+
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 6),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(18),
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
+                                  // Rich gradient background
                                   Container(
-                                    color: _photoPlaceholders[i],
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: gradientColors,
+                                      ),
+                                    ),
                                     child: Center(
-                                      child: Icon(
-                                        Icons.image,
-                                        size: 48,
-                                        color:
-                                            Colors.white.withOpacity(0.5),
+                                      child: Text(
+                                        pin.category.emoji,
+                                        style: const TextStyle(fontSize: 52),
                                       ),
                                     ),
                                   ),
+
+                                  // Visit date + mood overlay (top-left)
+                                  if (visit != null)
+                                    Positioned(
+                                      top: 12,
+                                      left: 12,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 5),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black
+                                                  .withValues(alpha: 0.35),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  visit.mood.emoji,
+                                                  style: const TextStyle(
+                                                      fontSize: 14),
+                                                ),
+                                                const SizedBox(width: 6),
+                                                Text(
+                                                  DateFormat('MMM d, yyyy')
+                                                      .format(visit.date),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                  // Review snippet overlay (bottom)
                                   Positioned(
                                     bottom: 0,
                                     left: 0,
                                     right: 0,
                                     child: Container(
                                       padding: const EdgeInsets.fromLTRB(
-                                          12, 20, 12, 10),
+                                          14, 32, 14, 14),
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
                                           colors: [
                                             Colors.transparent,
-                                            Colors.black.withOpacity(0.4),
+                                            Colors.black.withValues(alpha: 0.6),
                                           ],
                                         ),
                                       ),
                                       child: Text(
-                                        i < sortedVisits.length
-                                            ? DateFormat('MMM d, yyyy')
-                                                .format(
-                                                    sortedVisits[i].date)
-                                            : 'Memory',
+                                        visit != null &&
+                                                visit.review.isNotEmpty
+                                            ? visit.review
+                                            : '${pin.category.emoji} ${pin.name}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
+                                          height: 1.4,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
@@ -154,7 +228,7 @@ class PinDetailSheet extends StatelessWidget {
                                     horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF9B59B6)
-                                      .withOpacity(0.1),
+                                      .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Row(
@@ -186,7 +260,7 @@ class PinDetailSheet extends StatelessWidget {
                                   horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
                                 color:
-                                    pin.category.color.withOpacity(0.12),
+                                    pin.category.color.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
@@ -260,7 +334,7 @@ class PinDetailSheet extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1A535C).withOpacity(0.07),
+                            color: const Color(0xFF1A535C).withValues(alpha: 0.07),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Row(
@@ -326,7 +400,7 @@ class PinDetailSheet extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(18),
                                   border: Border.all(
                                     color: const Color(0xFFD2691E)
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: 0.3),
                                   ),
                                 ),
                                 child: Text(
@@ -398,7 +472,7 @@ class PinDetailSheet extends StatelessWidget {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: Colors.black.withValues(alpha: 0.06),
                   blurRadius: 10,
                   offset: const Offset(0, -3),
                 ),
@@ -537,7 +611,7 @@ class _VisitCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' hide Path;
@@ -74,6 +75,7 @@ class _MapScreenState extends State<MapScreen> {
         final displayedPins = pinsP.filteredPins;
         final friendPins =
             pinsP.showFriendPins ? userP.allFriendPins : <MapPin>[];
+        final isEmpty = pinsP.pins.isEmpty;
 
         return Scaffold(
           body: Stack(
@@ -96,25 +98,29 @@ class _MapScreenState extends State<MapScreen> {
                   ),
 
                   // Friend pins layer
-                  if (friendPins.isNotEmpty)
+                  if (friendPins.isNotEmpty && userP.friends.isNotEmpty)
                     MarkerLayer(
-                      markers: friendPins.map((pin) {
-                        final friend = userP.friends.firstWhere(
-                          (f) => f.id == pin.userId,
-                          orElse: () => userP.friends.first,
-                        );
-                        return Marker(
-                          point: pin.latLng,
-                          width: 48,
-                          height: 56,
-                          child: _PinMarker(
-                            pin: pin,
-                            color: friend.pinColor,
-                            isFriend: true,
-                            onTap: () => _showPinDetail(pin),
-                          ),
-                        );
-                      }).toList(),
+                      markers: friendPins
+                          .map((pin) {
+                            final friend = userP.friends.cast<Friend?>().firstWhere(
+                              (f) => f!.id == pin.userId,
+                              orElse: () => null,
+                            );
+                            if (friend == null) return null;
+                            return Marker(
+                              point: pin.latLng,
+                              width: 48,
+                              height: 56,
+                              child: _PinMarker(
+                                pin: pin,
+                                color: friend.pinColor,
+                                isFriend: true,
+                                onTap: () => _showPinDetail(pin),
+                              ),
+                            );
+                          })
+                          .whereType<Marker>()
+                          .toList(),
                     ),
 
                   // User pins layer
@@ -153,119 +159,152 @@ class _MapScreenState extends State<MapScreen> {
                 ],
               ),
 
-              // ── TOP GRADIENT OVERLAY ──────────────────────────────────────
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 120 + MediaQuery.of(context).padding.top,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xCC1A535C),
-                        Colors.transparent,
+              // ── EMPTY STATE OVERLAY ───────────────────────────────────────
+              if (isEmpty && !_addingPin)
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 28, vertical: 22),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0A1628).withValues(alpha: 0.82),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          '📍',
+                          style: TextStyle(fontSize: 52),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Your map is empty',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Tap + to drop your first memory',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.6),
+                            fontSize: 14,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 10,
-                    left: 20,
-                    right: 20,
-                  ),
-                  child: Row(
-                    children: [
-                      // Avatar
-                      Container(
-                        width: 36,
-                        height: 36,
+                ),
+
+              // ── FLOATING PILL HEADER ──────────────────────────────────────
+              Positioned(
+                top: 52,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        width: 280,
+                        height: 48,
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.2),
-                          border:
-                              Border.all(color: Colors.white.withOpacity(0.5)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            userP.user.avatarEmoji,
-                            style: const TextStyle(fontSize: 18),
+                          color: const Color(0xFF0A1628).withValues(alpha: 0.85),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'My Map',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 14),
+                            const Text(
+                              '🗺️',
+                              style: TextStyle(fontSize: 18),
                             ),
-                          ),
-                          Text(
-                            '${displayedPins.length} places',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.75),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      // Notification bell
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.notifications_outlined,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                      // Friend layer toggle
-                      GestureDetector(
-                        onTap: () => pinsP.toggleFriendPins(),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: pinsP.showFriendPins
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.people,
-                                size: 16,
-                                color: pinsP.showFriendPins
-                                    ? const Color(0xFF1A535C)
-                                    : Colors.white,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Friends',
+                            const SizedBox(width: 8),
+                            const Expanded(
+                              child: Text(
+                                'memorymap',
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: pinsP.showFriendPins
-                                      ? const Color(0xFF1A535C)
-                                      : Colors.white,
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.5,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
-                            ],
-                          ),
+                            ),
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                  minWidth: 36, minHeight: 36),
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.notifications_outlined,
+                                color: Colors.white.withValues(alpha: 0.8),
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // ── FRIENDS TOGGLE (below pill) ───────────────────────────────
+              Positioned(
+                top: 52 + 56,
+                right: 16,
+                child: GestureDetector(
+                  onTap: () => pinsP.toggleFriendPins(),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 7),
+                    decoration: BoxDecoration(
+                      color: pinsP.showFriendPins
+                          ? Colors.white
+                          : const Color(0xFF0A1628).withValues(alpha: 0.75),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.15),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.people,
+                          size: 16,
+                          color: pinsP.showFriendPins
+                              ? const Color(0xFF1A535C)
+                              : Colors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Friends',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: pinsP.showFriendPins
+                                ? const Color(0xFF1A535C)
+                                : Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -283,7 +322,8 @@ class _MapScreenState extends State<MapScreen> {
                       child: _showTimeSlider
                           ? TimeSliderWidget(
                               key: const ValueKey('slider'),
-                              earliest: DateTime(2023),
+                              earliest: DateTime.now()
+                                  .subtract(const Duration(days: 730)),
                               latest: _latestDate,
                               value: pinsP.timeSliderRange,
                               onChanged: (range) =>
@@ -300,7 +340,7 @@ class _MapScreenState extends State<MapScreen> {
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Colors.black.withOpacity(0.35),
+                            Colors.black.withValues(alpha: 0.35),
                             Colors.transparent,
                           ],
                         ),
@@ -324,7 +364,7 @@ class _MapScreenState extends State<MapScreen> {
                               decoration: BoxDecoration(
                                 color: _showTimeSlider
                                     ? const Color(0xFFFF6B6B)
-                                    : Colors.white.withOpacity(0.85),
+                                    : Colors.white.withValues(alpha: 0.85),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Icon(
@@ -357,7 +397,7 @@ class _MapScreenState extends State<MapScreen> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFFF6B6B).withOpacity(0.4),
+                          color: const Color(0xFFFF6B6B).withValues(alpha: 0.4),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -401,13 +441,11 @@ class _MapScreenState extends State<MapScreen> {
                   setState(() => _addingPin = true);
                 }
               },
-              backgroundColor: _addingPin
-                  ? Colors.grey.shade600
-                  : const Color(0xFFFF6B6B),
+              backgroundColor: const Color(0xFFFF6B6B),
+              foregroundColor: Colors.white,
               elevation: 4,
               child: Icon(
                 _addingPin ? Icons.close : Icons.add_location_alt,
-                color: Colors.white,
                 size: 26,
               ),
             ),
@@ -446,11 +484,11 @@ class _PinMarker extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 4,
                   offset: const Offset(0, 1),
                 ),
@@ -478,7 +516,7 @@ class _PinMarker extends StatelessWidget {
               border: Border.all(color: Colors.white, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.4),
+                  color: color.withValues(alpha: 0.4),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),

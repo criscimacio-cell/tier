@@ -24,11 +24,16 @@ class UserProvider extends ChangeNotifier {
   List<Friend> _friends = List.from(mockFriends);
   List<AppBadge> _badges = List.from(mockBadges);
 
+  bool _isLoggedIn = false;
+  bool _onboardingComplete = false;
+
   // ── Getters ──────────────────────────────────────────────────────────────
 
   AppUser get user => _user;
   List<Friend> get friends => _friends;
   List<AppBadge> get badges => _badges;
+  bool get isLoggedIn => _isLoggedIn;
+  bool get onboardingComplete => _onboardingComplete;
 
   List<AppBadge> get earnedBadges =>
       _badges.where((b) => _user.earnedBadgeIds.contains(b.id)).toList();
@@ -39,6 +44,31 @@ class UserProvider extends ChangeNotifier {
   // Returns all friend pins combined
   List<MapPin> get allFriendPins =>
       _friends.expand((f) => f.pins).toList();
+
+  // ── Auth / Onboarding ─────────────────────────────────────────────────────
+
+  void login(String name, String username) {
+    _user = AppUser(
+      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+      name: name,
+      username: '@${username.toLowerCase().replaceAll(' ', '.')}',
+      avatarEmoji: _randomEmoji(),
+      streak: 0,
+      earnedBadgeIds: [],
+    );
+    _isLoggedIn = true;
+    notifyListeners();
+  }
+
+  void completeOnboarding() {
+    _onboardingComplete = true;
+    notifyListeners();
+  }
+
+  String _randomEmoji() {
+    const emojis = ['🦊', '🐻', '🦁', '🐨', '🦄', '🐸', '🦋', '🌻', '🍀', '🌙'];
+    return emojis[DateTime.now().millisecond % emojis.length];
+  }
 
   // ── Streak ───────────────────────────────────────────────────────────────
 

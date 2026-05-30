@@ -30,160 +30,20 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: const Color(0xFFF7F3E9),
           body: CustomScrollView(
             slivers: [
-              // Header
-              SliverAppBar(
-                backgroundColor: const Color(0xFF1A535C),
-                expandedHeight: 220,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF1A535C),
-                          Color(0xFF0D3B45),
-                        ],
-                      ),
-                    ),
-                    child: SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                // Avatar
-                                Container(
-                                  width: 72,
-                                  height: 72,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white.withOpacity(0.15),
-                                    border: Border.all(
-                                      color: Colors.white.withOpacity(0.4),
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      user.avatarEmoji,
-                                      style: const TextStyle(fontSize: 36),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        user.name,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                      ),
-                                      Text(
-                                        user.username,
-                                        style: TextStyle(
-                                          color:
-                                              Colors.white.withOpacity(0.7),
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFFF6B6B)
-                                              .withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                            color: const Color(0xFFFF6B6B)
-                                                .withOpacity(0.4),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          '🔥 ${user.streak} day streak',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                title: const Text(
-                  'Profile',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.settings_outlined,
-                        color: Colors.white),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-
-              // Stats row
+              // ── Editorial Header ──────────────────────────────────────────
               SliverToBoxAdapter(
-                child: Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      _StatBox(
-                          value: '${pins.length}', label: 'Places'),
-                      _Divider(),
-                      _StatBox(
-                          value: '$totalVisits', label: 'Visits'),
-                      _Divider(),
-                      _StatBox(
-                          value: '${cities.length}', label: 'Cities'),
-                      _Divider(),
-                      _StatBox(value: '1', label: 'Country'),
-                    ],
-                  ),
+                child: _ProfileHeader(
+                  user: user,
+                  pinsCount: pins.length,
+                  totalVisits: totalVisits,
+                  citiesCount: cities.length,
                 ),
               ),
 
               // Badges section
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
                   child: Row(
                     children: [
                       const Text(
@@ -273,9 +133,9 @@ class ProfileScreen extends StatelessWidget {
 
               // Recent activity
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-                  child: const Text(
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 4, 16, 12),
+                  child: Text(
                     'Recent Activity',
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
@@ -306,6 +166,177 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+// ── Editorial profile header ──────────────────────────────────────────────────
+
+class _ProfileHeader extends StatelessWidget {
+  final AppUser user;
+  final int pinsCount;
+  final int totalVisits;
+  final int citiesCount;
+
+  const _ProfileHeader({
+    required this.user,
+    required this.pinsCount,
+    required this.totalVisits,
+    required this.citiesCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Dark header background
+        Container(
+          height: 280,
+          decoration: const BoxDecoration(
+            color: Color(0xFF0A1628),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF0A1628), Color(0xFF1A2744)],
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 8),
+                // Settings button top-right
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: IconButton(
+                      icon: const Icon(Icons.settings_outlined,
+                          color: Colors.white54),
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+                // Avatar circle
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.12),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      width: 2.5,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      user.avatarEmoji,
+                      style: const TextStyle(fontSize: 38),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Name
+                Text(
+                  user.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // Username
+                Text(
+                  user.username,
+                  style: const TextStyle(
+                    color: Color(0xFF8899BB),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 28),
+              ],
+            ),
+          ),
+        ),
+
+        // Streak badge — overlapping the bottom edge of header
+        Positioned(
+          bottom: 60,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF39C12),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFF39C12).withValues(alpha: 0.4),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Text(
+                '🔥 ${user.streak} day streak',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // Stats card — overlaps the dark header bottom
+        Positioned(
+          bottom: -42,
+          left: 20,
+          right: 20,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                _StatBox(value: '$pinsCount', label: 'Places'),
+                _StatDivider(),
+                _StatBox(value: '$totalVisits', label: 'Visits'),
+                _StatDivider(),
+                _StatBox(value: '$citiesCount', label: 'Cities'),
+                _StatDivider(),
+                const _StatBox(value: '1', label: 'Country'),
+              ],
+            ),
+          ),
+        ),
+
+        // Spacer to account for the overlapping card
+        const Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: SizedBox(height: 42),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Stat components ───────────────────────────────────────────────────────────
 
 class _StatBox extends StatelessWidget {
   final String value;
@@ -339,7 +370,7 @@ class _StatBox extends StatelessWidget {
   }
 }
 
-class _Divider extends StatelessWidget {
+class _StatDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -372,7 +403,7 @@ class _ProgressBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
           ),
         ],
@@ -408,7 +439,7 @@ class _ProgressBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: color.withOpacity(0.12),
+              backgroundColor: color.withValues(alpha: 0.12),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 6,
             ),
@@ -435,7 +466,7 @@ class _ActivityItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
           ),
         ],
@@ -447,7 +478,7 @@ class _ActivityItem extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: pin.category.color.withOpacity(0.12),
+              color: pin.category.color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Center(

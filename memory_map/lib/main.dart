@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'data/mock_data.dart';
 import 'providers/pins_provider.dart';
 import 'providers/user_provider.dart';
 import 'screens/map_screen.dart';
 import 'screens/discover_screen.dart';
 import 'screens/friends_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/onboarding_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,17 @@ class MemoryMapApp extends StatelessWidget {
         title: 'Memory Map',
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
-        home: const _AppShell(),
+        home: Consumer<UserProvider>(
+          builder: (_, userP, __) {
+            if (!userP.isLoggedIn) {
+              return const LoginScreen();
+            }
+            if (!userP.onboardingComplete) {
+              return const OnboardingScreen();
+            }
+            return const _AppShell();
+          },
+        ),
       ),
     );
   }
@@ -121,7 +132,7 @@ class _AppShellState extends State<_AppShell> {
 
   Future<void> _initData() async {
     final pinsProvider = context.read<PinsProvider>();
-    await pinsProvider.loadFromStorage(mockPins);
+    await pinsProvider.loadFromStorage();
     if (mounted) {
       setState(() => _initialized = true);
     }
@@ -131,7 +142,7 @@ class _AppShellState extends State<_AppShell> {
   Widget build(BuildContext context) {
     if (!_initialized) {
       return const Scaffold(
-        backgroundColor: Color(0xFF1A535C),
+        backgroundColor: Color(0xFF0A1628),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -142,20 +153,21 @@ class _AppShellState extends State<_AppShell> {
               ),
               SizedBox(height: 20),
               Text(
-                'Memory Map',
+                'memorymap',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
+                  letterSpacing: -1.0,
                 ),
               ),
               SizedBox(height: 8),
               Text(
-                'Your world, remembered',
+                'every place, a story.',
                 style: TextStyle(
-                  color: Colors.white60,
+                  color: Color(0xFF8899BB),
                   fontSize: 15,
+                  fontStyle: FontStyle.italic,
                 ),
               ),
               SizedBox(height: 48),
@@ -178,7 +190,7 @@ class _AppShellState extends State<_AppShell> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 20,
               offset: const Offset(0, -4),
             ),

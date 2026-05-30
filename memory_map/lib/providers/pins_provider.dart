@@ -59,14 +59,9 @@ class PinsProvider extends ChangeNotifier {
 
   // ── Initialization ────────────────────────────────────────────────────────
 
-  Future<void> loadFromStorage(List<MapPin> defaults) async {
+  Future<void> loadFromStorage() async {
     final stored = await PinsStorage.loadPins();
-    if (stored.isEmpty) {
-      _pins = List.from(defaults);
-      await PinsStorage.savePins(_pins);
-    } else {
-      _pins = stored;
-    }
+    _pins = stored; // empty list if first run — no defaults
     _isLoaded = true;
     notifyListeners();
   }

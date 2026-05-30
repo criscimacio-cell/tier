@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
@@ -62,54 +63,16 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           backgroundColor: const Color(0xFFF7F3E9),
           body: CustomScrollView(
             slivers: [
-              // App bar
-              SliverAppBar(
-                backgroundColor: const Color(0xFF1A535C),
-                pinned: true,
-                title: const Text(
-                  'Discover',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(60),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (v) =>
-                          setState(() => _searchQuery = v),
-                      decoration: InputDecoration(
-                        hintText: 'Search places, areas...',
-                        hintStyle: TextStyle(
-                            color: Colors.grey.shade400,
-                            fontSize: 14),
-                        prefixIcon: const Icon(Icons.search,
-                            color: Colors.grey),
-                        suffixIcon: _searchQuery.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear,
-                                    color: Colors.grey),
-                                onPressed: () => setState(() {
-                                  _searchQuery = '';
-                                  _searchController.clear();
-                                }),
-                              )
-                            : null,
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
+              // ── Frosted pill header ──────────────────────────────────────
+              SliverToBoxAdapter(
+                child: _DiscoverHeader(
+                  searchController: _searchController,
+                  searchQuery: _searchQuery,
+                  onSearchChanged: (v) => setState(() => _searchQuery = v),
+                  onSearchClear: () => setState(() {
+                    _searchQuery = '';
+                    _searchController.clear();
+                  }),
                 ),
               ),
 
@@ -121,11 +84,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Filter by Vibe',
+                        'Vibe',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
                           color: Color(0xFF1A535C),
+                          letterSpacing: 0.5,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -143,17 +107,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                     const Duration(milliseconds: 180),
                                 margin: const EdgeInsets.only(right: 8),
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 6),
+                                    horizontal: 16, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: sel
-                                      ? cat.color
-                                      : Colors.white,
-                                  borderRadius:
-                                      BorderRadius.circular(18),
+                                  color: sel ? cat.color : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
                                     color: sel
                                         ? cat.color
-                                        : Colors.grey.shade300,
+                                        : Colors.grey.shade400,
+                                    width: sel ? 0 : 1.5,
                                   ),
                                 ),
                                 child: Text(
@@ -163,7 +125,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                         ? Colors.white
                                         : Colors.black87,
                                     fontSize: 13,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: sel
+                                        ? FontWeight.w600
+                                        : FontWeight.w400,
                                   ),
                                 ),
                               ),
@@ -171,13 +135,14 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           }).toList(),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 14),
                       const Text(
-                        'Filter by Budget',
+                        'Budget',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
                           color: Color(0xFF1A535C),
+                          letterSpacing: 0.5,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -195,17 +160,17 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                     const Duration(milliseconds: 180),
                                 margin: const EdgeInsets.only(right: 8),
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 6),
+                                    horizontal: 18, vertical: 6),
                                 decoration: BoxDecoration(
                                   color: sel
-                                      ? const Color(0xFF1A535C)
-                                      : Colors.white,
-                                  borderRadius:
-                                      BorderRadius.circular(18),
+                                      ? const Color(0xFF0A1628)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
                                     color: sel
-                                        ? const Color(0xFF1A535C)
-                                        : Colors.grey.shade300,
+                                        ? const Color(0xFF0A1628)
+                                        : Colors.grey.shade400,
+                                    width: sel ? 0 : 1.5,
                                   ),
                                 ),
                                 child: Text(
@@ -214,7 +179,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                     color: sel
                                         ? Colors.white
                                         : Colors.black87,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: sel
+                                        ? FontWeight.w700
+                                        : FontWeight.w400,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -249,7 +216,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                               horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFF6B6B)
-                                .withOpacity(0.15),
+                                .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -296,19 +263,25 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           child: Container(
                             width: 145,
                             margin: const EdgeInsets.only(right: 12),
-                            padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16),
+                              border: const Border(
+                                left: BorderSide(
+                                  color: Color(0xFFFF6B6B),
+                                  width: 4,
+                                ),
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color:
-                                      Colors.black.withOpacity(0.06),
+                                      Colors.black.withValues(alpha: 0.06),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
+                            padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
                             child: Column(
                               crossAxisAlignment:
                                   CrossAxisAlignment.start,
@@ -348,9 +321,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
               // ── Friend Recommendations ─────────────────────────────────
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
-                  child: const Text(
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 20, 16, 10),
+                  child: Text(
                     '🌟 Friend Picks',
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
@@ -378,11 +351,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: friend.pinColor.withOpacity(0.3),
+                            color: friend.pinColor.withValues(alpha: 0.3),
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 6,
                             ),
                           ],
@@ -398,7 +371,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: friend.pinColor
-                                        .withOpacity(0.15),
+                                        .withValues(alpha: 0.15),
                                   ),
                                   child: Center(
                                     child: Text(
@@ -475,10 +448,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   delegate: SliverChildBuilderDelegate(
                     (_, i) {
                       final pin = untried[i];
-                      final friend = userP.friends.firstWhere(
-                        (f) => f.id == pin.userId,
-                        orElse: () => userP.friends.first,
+                      final friend = userP.friends.cast<Friend?>().firstWhere(
+                        (f) => f!.id == pin.userId,
+                        orElse: () => null,
                       );
+                      if (friend == null) return const SizedBox.shrink();
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16),
@@ -557,6 +531,105 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 }
 
+// ── Frosted discover header ───────────────────────────────────────────────────
+
+class _DiscoverHeader extends StatelessWidget {
+  final TextEditingController searchController;
+  final String searchQuery;
+  final ValueChanged<String> onSearchChanged;
+  final VoidCallback onSearchClear;
+
+  const _DiscoverHeader({
+    required this.searchController,
+    required this.searchQuery,
+    required this.onSearchChanged,
+    required this.onSearchClear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFF0A1628),
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'explore.',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                          fontStyle: FontStyle.italic,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'your world, your discoveries.',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.5),
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Container(
+                    color: Colors.white.withValues(alpha: 0.12),
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: onSearchChanged,
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      decoration: InputDecoration(
+                        hintText: 'Search places, areas...',
+                        hintStyle: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            fontSize: 14),
+                        prefixIcon: Icon(Icons.search,
+                            color: Colors.white.withValues(alpha: 0.6)),
+                        suffixIcon: searchQuery.isNotEmpty
+                            ? IconButton(
+                                icon: Icon(Icons.clear,
+                                    color: Colors.white.withValues(alpha: 0.6)),
+                                onPressed: onSearchClear,
+                              )
+                            : null,
+                        filled: false,
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 0),
+                        border: InputBorder.none,
+                      ),
+                      cursorColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _UntriedPinCard extends StatelessWidget {
   final MapPin pin;
   final Friend friend;
@@ -574,88 +647,90 @@ class _UntriedPinCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: friend.pinColor.withOpacity(0.25),
+          border: const Border(
+            left: BorderSide(color: Color(0xFFFF6B6B), width: 4),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 6,
             ),
           ],
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                color: pin.category.color.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  pin.category.emoji,
-                  style: const TextStyle(fontSize: 22),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: pin.category.color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    pin.category.emoji,
+                    style: const TextStyle(fontSize: 22),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      pin.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      pin.address,
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    StarRating(rating: pin.rating, size: 13),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    pin.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: friend.pinColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                  Text(
-                    pin.address,
-                    style: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontSize: 12,
+                    child: Text(
+                      friend.avatarEmoji,
+                      style: const TextStyle(fontSize: 14),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-                  StarRating(rating: pin.rating, size: 13),
+                  Text(
+                    pin.priceRange.label,
+                    style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ],
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: friend.pinColor.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    friend.avatarEmoji,
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  pin.priceRange.label,
-                  style: TextStyle(
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
