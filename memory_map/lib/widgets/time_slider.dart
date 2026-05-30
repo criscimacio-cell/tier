@@ -72,7 +72,7 @@ class _TimeSliderWidgetState extends State<TimeSliderWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.75),
+        color: Colors.black.withValues(alpha: 0.75),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: Column(
@@ -92,7 +92,7 @@ class _TimeSliderWidgetState extends State<TimeSliderWidget> {
               Text(
                 'Time Filter',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: 11,
                   letterSpacing: 1,
                 ),
@@ -110,9 +110,9 @@ class _TimeSliderWidgetState extends State<TimeSliderWidget> {
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: const Color(0xFFFF6B6B),
-              inactiveTrackColor: Colors.white.withOpacity(0.2),
+              inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
               thumbColor: Colors.white,
-              overlayColor: const Color(0xFFFF6B6B).withOpacity(0.3),
+              overlayColor: const Color(0xFFFF6B6B).withValues(alpha: 0.3),
               rangeThumbShape: const RoundRangeSliderThumbShape(
                 enabledThumbRadius: 8,
               ),

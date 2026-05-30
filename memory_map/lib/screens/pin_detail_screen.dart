@@ -27,10 +27,10 @@ class PinDetailSheet extends StatelessWidget {
     final base = pin.category.color;
     // Darken the base color for a gradient feel
     final darkened = Color.fromARGB(
-      base.alpha,
-      (base.red * 0.55).round(),
-      (base.green * 0.55).round(),
-      (base.blue * 0.55).round(),
+      ((base.a * 255.0).round() & 0xff),
+      ((base.r * 255.0 * 0.55).round() & 0xff),
+      ((base.g * 255.0 * 0.55).round() & 0xff),
+      ((base.b * 255.0 * 0.55).round() & 0xff),
     );
     // Alternate slight hue variations to give each slide a unique feel
     switch (i % 4) {

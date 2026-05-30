@@ -238,7 +238,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: friend.pinColor.withOpacity(0.2),
+                          color: friend.pinColor.withValues(alpha: 0.2),
                         ),
                       ),
                       child: Row(
@@ -391,7 +391,7 @@ class _FriendsListTab extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 6,
                             ),
                           ],
@@ -403,7 +403,7 @@ class _FriendsListTab extends StatelessWidget {
                               height: 44,
                               decoration: BoxDecoration(
                                 color: pin.category.color
-                                    .withOpacity(0.12),
+                                    .withValues(alpha: 0.12),
                                 borderRadius:
                                     BorderRadius.circular(10),
                               ),
@@ -473,7 +473,7 @@ class _FriendCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -492,9 +492,9 @@ class _FriendCard extends StatelessWidget {
                   height: 52,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: friend.pinColor.withOpacity(0.15),
+                    color: friend.pinColor.withValues(alpha: 0.15),
                     border: Border.all(
-                      color: friend.pinColor.withOpacity(0.4),
+                      color: friend.pinColor.withValues(alpha: 0.4),
                       width: 2,
                     ),
                   ),
@@ -532,7 +532,7 @@ class _FriendCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: friend.pinColor.withOpacity(0.1),
+                    color: friend.pinColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -562,10 +562,10 @@ class _FriendCard extends StatelessWidget {
                   width: 60,
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
-                    color: pin.category.color.withOpacity(0.08),
+                    color: pin.category.color.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: pin.category.color.withOpacity(0.2),
+                      color: pin.category.color.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(
@@ -598,7 +598,7 @@ class _FriendCard extends StatelessWidget {
                     onPressed: onViewPins,
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
-                          color: friend.pinColor.withOpacity(0.5)),
+                          color: friend.pinColor.withValues(alpha: 0.5)),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -661,7 +661,7 @@ class _ActivityTab extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 6,
               ),
             ],
@@ -675,7 +675,7 @@ class _ActivityTab extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: item.friend.pinColor.withOpacity(0.15),
+                  color: item.friend.pinColor.withValues(alpha: 0.15),
                 ),
                 child: Center(
                   child: Text(
@@ -710,7 +710,7 @@ class _ActivityTab extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: item.pin.category.color.withOpacity(0.07),
+                        color: item.pin.category.color.withValues(alpha: 0.07),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -814,10 +814,10 @@ class _GroupsTab extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A535C).withOpacity(0.07),
+              color: const Color(0xFF1A535C).withValues(alpha: 0.07),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: const Color(0xFF1A535C).withOpacity(0.3),
+                color: const Color(0xFF1A535C).withValues(alpha: 0.3),
                 style: BorderStyle.solid,
               ),
             ),
@@ -850,7 +850,7 @@ class _GroupsTab extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                 ),
               ],
@@ -861,7 +861,7 @@ class _GroupsTab extends StatelessWidget {
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.12),
+                    color: color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Center(
@@ -898,7 +898,7 @@ class _GroupsTab extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(

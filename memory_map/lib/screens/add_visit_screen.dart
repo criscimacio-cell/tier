@@ -348,7 +348,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                           onDeleted: () =>
                               setState(() => _bestItems.remove(item)),
                           backgroundColor:
-                              const Color(0xFF1A535C).withOpacity(0.1),
+                              const Color(0xFF1A535C).withValues(alpha: 0.1),
                           deleteIconColor: const Color(0xFF1A535C),
                           labelStyle: const TextStyle(
                             color: Color(0xFF1A535C),
@@ -428,7 +428,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                           ),
                           child: Center(
                             child: Icon(Icons.image,
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 size: 32),
                           ),
                         ),

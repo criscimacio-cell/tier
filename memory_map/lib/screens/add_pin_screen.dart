@@ -141,10 +141,10 @@ class _AddPinScreenState extends State<AddPinScreen> {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A535C).withOpacity(0.08),
+                      color: const Color(0xFF1A535C).withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: const Color(0xFF1A535C).withOpacity(0.2),
+                        color: const Color(0xFF1A535C).withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -217,7 +217,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
                           duration: const Duration(milliseconds: 200),
                           decoration: BoxDecoration(
                             color: sel
-                                ? cat.color.withOpacity(0.15)
+                                ? cat.color.withValues(alpha: 0.15)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(

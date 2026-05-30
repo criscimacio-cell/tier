@@ -15,7 +15,7 @@ class BadgeCard extends StatelessWidget {
         boxShadow: badge.earned
             ? [
                 BoxShadow(
-                  color: const Color(0xFF1A535C).withOpacity(0.1),
+                  color: const Color(0xFF1A535C).withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -23,7 +23,7 @@ class BadgeCard extends StatelessWidget {
             : [],
         border: Border.all(
           color: badge.earned
-              ? const Color(0xFF1A535C).withOpacity(0.2)
+              ? const Color(0xFF1A535C).withValues(alpha: 0.2)
               : Colors.grey.shade200,
         ),
       ),
@@ -44,7 +44,7 @@ class BadgeCard extends StatelessWidget {
                       : Colors.grey.shade200,
                   border: Border.all(
                     color: badge.earned
-                        ? const Color(0xFFF39C12).withOpacity(0.4)
+                        ? const Color(0xFFF39C12).withValues(alpha: 0.4)
                         : Colors.grey.shade300,
                     width: 2,
                   ),

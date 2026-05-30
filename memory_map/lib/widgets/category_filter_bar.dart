@@ -26,7 +26,7 @@ class CategoryFilterBar extends StatelessWidget {
               label: const Text('All'),
               selected: selected == null,
               onSelected: (_) => onSelected(null),
-              backgroundColor: Colors.white.withOpacity(0.85),
+              backgroundColor: Colors.white.withValues(alpha: 0.85),
               selectedColor: const Color(0xFF1A535C),
               labelStyle: TextStyle(
                 color: selected == null ? Colors.white : Colors.black87,
@@ -49,7 +49,7 @@ class CategoryFilterBar extends StatelessWidget {
                 label: Text(cat.label),
                 selected: isSelected,
                 onSelected: (_) => onSelected(isSelected ? null : cat),
-                backgroundColor: Colors.white.withOpacity(0.85),
+                backgroundColor: Colors.white.withValues(alpha: 0.85),
                 selectedColor: cat.color,
                 labelStyle: TextStyle(
                   color: isSelected ? Colors.white : Colors.black87,
