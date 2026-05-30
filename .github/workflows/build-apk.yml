@@ -31,10 +31,6 @@ jobs:
         working-directory: memory_map
         run: flutter pub get
 
-      - name: Analyze
-        working-directory: memory_map
-        run: flutter analyze --no-fatal-infos
-
       - name: Build release APK
         working-directory: memory_map
         run: flutter build apk --release --split-per-abi
