@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
+import '../main.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -47,10 +48,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _finish() {
     context.read<UserProvider>().completeOnboarding();
-    // completeOnboarding triggers notifyListeners, which causes the Consumer
-    // in MemoryMapApp to rebuild and show _AppShell automatically.
-    // Pop all routes back to root so the Consumer can take over.
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const AppShell()),
+      (route) => false,
+    );
   }
 
   @override

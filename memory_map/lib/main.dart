@@ -43,7 +43,7 @@ class MemoryMapApp extends StatelessWidget {
             if (!userP.onboardingComplete) {
               return const OnboardingScreen();
             }
-            return const _AppShell();
+            return const AppShell();
           },
         ),
       ),
@@ -106,14 +106,14 @@ class MemoryMapApp extends StatelessWidget {
   }
 }
 
-class _AppShell extends StatefulWidget {
-  const _AppShell();
+class AppShell extends StatefulWidget {
+  const AppShell();
 
   @override
-  State<_AppShell> createState() => _AppShellState();
+  State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<_AppShell> {
+class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
   bool _initialized = false;
 
