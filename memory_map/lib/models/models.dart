@@ -250,14 +250,14 @@ class Friend {
   });
 }
 
-class Badge {
+class AppBadge {
   final String id;
   final String name;
   final String emoji;
   final String description;
   final bool earned;
 
-  Badge({
+  AppBadge({
     required this.id,
     required this.name,
     required this.emoji,
