@@ -1,0 +1,47 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [claude/memory-map-app-jA8br, main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.1'
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: memory_map
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: memory_map
+        run: flutter analyze --no-fatal-infos
+
+      - name: Build release APK
+        working-directory: memory_map
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: memory-map-apk
+          path: memory_map/build/app/outputs/flutter-apk/*.apk
+          retention-days: 30
