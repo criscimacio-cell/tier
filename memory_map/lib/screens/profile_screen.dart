@@ -184,154 +184,155 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        // Dark header background
-        Container(
-          height: 280,
-          decoration: const BoxDecoration(
-            color: Color(0xFF0A1628),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF0A1628), Color(0xFF1A2744)],
+    // Total height = dark header (280) + half stats card overlap (42)
+    return SizedBox(
+      height: 322,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Dark header background
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 280,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF0A1628), Color(0xFF1A2744)],
+                ),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 8),
+                    // Settings button top-right
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: IconButton(
+                          icon: const Icon(Icons.settings_outlined,
+                              color: Colors.white54),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
+                    // Avatar circle
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.12),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 2.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          user.avatarEmoji,
+                          style: const TextStyle(fontSize: 38),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Name
+                    Text(
+                      user.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    // Username
+                    Text(
+                      user.username,
+                      style: const TextStyle(
+                        color: Color(0xFF8899BB),
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                  ],
+                ),
+              ),
             ),
           ),
-          child: SafeArea(
-            bottom: false,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 8),
-                // Settings button top-right
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: IconButton(
-                      icon: const Icon(Icons.settings_outlined,
-                          color: Colors.white54),
-                      onPressed: () {},
+
+          // Streak badge — positioned above the stats card overlap
+          Positioned(
+            top: 228,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF39C12),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFF39C12).withValues(alpha: 0.4),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
                     ),
-                  ),
+                  ],
                 ),
-                // Avatar circle
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      width: 2.5,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      user.avatarEmoji,
-                      style: const TextStyle(fontSize: 38),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Name
-                Text(
-                  user.name,
+                child: Text(
+                  '🔥 ${user.streak} day streak',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                // Username
-                Text(
-                  user.username,
-                  style: const TextStyle(
-                    color: Color(0xFF8899BB),
+                    fontWeight: FontWeight.w700,
                     fontSize: 14,
                   ),
                 ),
-                const SizedBox(height: 28),
-              ],
+              ),
             ),
           ),
-        ),
 
-        // Streak badge — overlapping the bottom edge of header
-        Positioned(
-          bottom: 60,
-          left: 0,
-          right: 0,
-          child: Center(
+          // Stats card — overlaps the dark header bottom
+          Positioned(
+            top: 258,
+            left: 20,
+            right: 20,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 18),
               decoration: BoxDecoration(
-                color: const Color(0xFFF39C12),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFF39C12).withValues(alpha: 0.4),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
-              child: Text(
-                '🔥 ${user.streak} day streak',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
-                ),
+              child: Row(
+                children: [
+                  _StatBox(value: '$pinsCount', label: 'Places'),
+                  _StatDivider(),
+                  _StatBox(value: '$totalVisits', label: 'Visits'),
+                  _StatDivider(),
+                  _StatBox(value: '$citiesCount', label: 'Cities'),
+                  _StatDivider(),
+                  const _StatBox(value: '1', label: 'Country'),
+                ],
               ),
             ),
           ),
-        ),
-
-        // Stats card — overlaps the dark header bottom
-        Positioned(
-          bottom: -42,
-          left: 20,
-          right: 20,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                _StatBox(value: '$pinsCount', label: 'Places'),
-                _StatDivider(),
-                _StatBox(value: '$totalVisits', label: 'Visits'),
-                _StatDivider(),
-                _StatBox(value: '$citiesCount', label: 'Cities'),
-                _StatDivider(),
-                const _StatBox(value: '1', label: 'Country'),
-              ],
-            ),
-          ),
-        ),
-
-        // Spacer to account for the overlapping card
-        const Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: SizedBox(height: 42),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

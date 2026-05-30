@@ -21,7 +21,7 @@ class UserProvider extends ChangeNotifier {
     ],
   );
 
-  List<Friend> _friends = List.from(mockFriends);
+  final List<Friend> _friends = List.from(mockFriends);
   List<AppBadge> _badges = List.from(mockBadges);
 
   bool _isLoggedIn = false;
