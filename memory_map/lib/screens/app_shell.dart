@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/pins_provider.dart';
 import '../providers/user_provider.dart';
+import 'login_screen.dart';
 import 'map_screen.dart';
 import 'discover_screen.dart';
 import 'friends_screen.dart';
@@ -26,10 +27,31 @@ class _AppShellState extends State<AppShell> {
     ProfileScreen(),
   ];
 
+  void _onAuthChanged() {
+    if (!mounted) return;
+    if (!context.read<UserProvider>().isLoggedIn) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        (_) => false,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<UserProvider>().addListener(_onAuthChanged);
+    });
     _initData();
+  }
+
+  @override
+  void dispose() {
+    try {
+      context.read<UserProvider>().removeListener(_onAuthChanged);
+    } catch (_) {}
+    super.dispose();
   }
 
   Future<void> _initData() async {

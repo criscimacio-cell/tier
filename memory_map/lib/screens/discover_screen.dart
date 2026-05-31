@@ -320,102 +320,102 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               ],
 
               // ── Friend Recommendations ─────────────────────────────────
-              SliverToBoxAdapter(
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 20, 16, 10),
-                  child: Text(
-                    '🌟 Friend Picks',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 17,
-                      color: Color(0xFF1A1A2E),
+              if (userP.friends.isNotEmpty) ...[
+                SliverToBoxAdapter(
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(16, 20, 16, 10),
+                    child: Text(
+                      '🌟 Friend Picks',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 17,
+                        color: Color(0xFF1A1A2E),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 130,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: userP.friends.length,
-                    itemBuilder: (_, i) {
-                      final friend = userP.friends[i];
-                      return Container(
-                        width: 140,
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: friend.pinColor.withValues(alpha: 0.3),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 130,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: userP.friends.length,
+                      itemBuilder: (_, i) {
+                        final friend = userP.friends[i];
+                        return Container(
+                          width: 140,
+                          margin: const EdgeInsets.only(right: 12),
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: friend.pinColor.withValues(alpha: 0.3),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 6,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: friend.pinColor
-                                        .withValues(alpha: 0.15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 32,
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: friend.pinColor
+                                          .withValues(alpha: 0.15),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        friend.avatarEmoji,
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ),
                                   ),
-                                  child: Center(
+                                  const SizedBox(width: 8),
+                                  Expanded(
                                     child: Text(
-                                      friend.avatarEmoji,
+                                      friend.name.split(' ').first,
                                       style: const TextStyle(
-                                          fontSize: 16),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    friend.name.split(' ').first,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Text(
-                              '${friend.pins.length} places',
-                              style: TextStyle(
-                                color: friend.pinColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
+                                ],
                               ),
-                            ),
-                            Text(
-                              friend.username,
-                              style: TextStyle(
-                                color: Colors.grey.shade400,
-                                fontSize: 11,
+                              const Spacer(),
+                              Text(
+                                '${friend.pins.length} places',
+                                style: TextStyle(
+                                  color: friend.pinColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                              Text(
+                                friend.username,
+                                style: TextStyle(
+                                  color: Colors.grey.shade400,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
+              ],
 
               // ── Places you haven't tried ───────────────────────────────
               if (untried.isNotEmpty) ...[
@@ -478,6 +478,43 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ),
                 ),
               ],
+
+              // ── Empty state (no pins, no friends, no search) ───────────
+              if (nudges.isEmpty &&
+                  userP.friends.isEmpty &&
+                  _searchQuery.isEmpty &&
+                  _vibeFilter == null &&
+                  _budgetFilter == null)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
+                    child: Column(
+                      children: [
+                        const Text('🗺️', style: TextStyle(fontSize: 56)),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Nothing to discover yet',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF1A1A2E),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Drop your first pin on the map to start building your memory collection.',
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 14,
+                            height: 1.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
               // ── Search results / All pins ──────────────────────────────
               if (_searchQuery.isNotEmpty ||

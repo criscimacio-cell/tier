@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/models.dart';
 import '../providers/pins_provider.dart';
-import '../data/mock_data.dart';
+import '../providers/user_provider.dart';
 import 'add_visit_screen.dart';
 
 class AddPinScreen extends StatefulWidget {
@@ -42,10 +42,11 @@ class _AddPinScreenState extends State<AddPinScreen> {
 
     final loc = widget.initialLocation ??
         const LatLng(14.5547, 121.0244); // Default: BGC
+    final userId = context.read<UserProvider>().user.id;
 
     final newPin = MapPin(
       id: const Uuid().v4(),
-      userId: kCurrentUserId,
+      userId: userId,
       lat: loc.latitude,
       lng: loc.longitude,
       name: _nameController.text.trim(),

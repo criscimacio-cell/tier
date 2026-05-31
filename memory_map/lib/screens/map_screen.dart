@@ -439,7 +439,7 @@ class _MapScreenState extends State<MapScreen> {
 
               // BOTTOM FILTER + TIME SLIDER
               Positioned(
-                bottom: 80,
+                bottom: 96,
                 left: 0,
                 right: 0,
                 child: Column(
@@ -515,7 +515,7 @@ class _MapScreenState extends State<MapScreen> {
 
           // FABs
           floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 72),
+            padding: const EdgeInsets.only(bottom: 100),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
