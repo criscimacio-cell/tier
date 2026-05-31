@@ -71,6 +71,7 @@ class PinsProvider extends ChangeNotifier {
           review: v['review'] ?? '',
           mood: Mood.values[(v['mood'] as int?) ?? 0],
           journalEntry: v['journal_entry'] ?? '',
+          photoUrls: List<String>.from(v['photo_urls'] ?? []),
         )).toList();
         loaded.add(MapPin(
           id: row['id'] as String,

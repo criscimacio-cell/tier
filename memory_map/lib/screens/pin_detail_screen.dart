@@ -89,6 +89,9 @@ class PinDetailSheet extends StatelessWidget {
                               i < sortedVisits.length ? sortedVisits[i] : null;
                           final gradientColors = _gradientForIndex(i);
 
+                          final hasPhoto = visit != null &&
+                              visit.photoUrls.isNotEmpty;
+
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 6),
@@ -97,8 +100,28 @@ class PinDetailSheet extends StatelessWidget {
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
-                                  // Rich gradient background
-                                  Container(
+                                  // Photo or gradient background
+                                  if (hasPhoto)
+                                    Image.network(
+                                      visit.photoUrls.first,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: gradientColors,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(pin.category.emoji,
+                                              style: const TextStyle(
+                                                  fontSize: 52)),
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    Container(
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         begin: Alignment.topLeft,

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/models.dart';
 
@@ -97,6 +98,25 @@ class SupabaseService {
     await _client.from('pins').delete().eq('id', pinId);
   }
 
+  // STORAGE
+  Future<String?> uploadVisitPhoto(String filePath, String userId, String visitId) async {
+    try {
+      final file = File(filePath);
+      final bytes = await file.readAsBytes();
+      final ext = filePath.split('.').last.toLowerCase();
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.$ext';
+      final storagePath = '$userId/$visitId/$fileName';
+      await _client.storage.from('visit-photos').uploadBinary(
+        storagePath,
+        bytes,
+        fileOptions: FileOptions(contentType: 'image/$ext', upsert: true),
+      );
+      return _client.storage.from('visit-photos').getPublicUrl(storagePath);
+    } catch (_) {
+      return null;
+    }
+  }
+
   // VISITS
   Future<List<Map<String, dynamic>>> getVisits(String pinId) async {
     return await _client.from('visits').select().eq('pin_id', pinId).order('visit_date', ascending: false);
@@ -111,6 +131,7 @@ class SupabaseService {
       'review': visit.review,
       'mood': visit.mood.index,
       'journal_entry': visit.journalEntry,
+      'photo_urls': visit.photoUrls,
     });
   }
 }
