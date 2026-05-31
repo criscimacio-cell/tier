@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import 'package:provider/provider.dart';
 import '../models/models.dart';
@@ -25,6 +26,19 @@ class _MapScreenState extends State<MapScreen> {
   bool _showTimeSlider = false;
 
   DateTime get _latestDate => DateTime.now();
+
+  Future<void> _goToMyLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+    if (permission == LocationPermission.deniedForever) return;
+    final pos = await Geolocator.getCurrentPosition();
+    _mapController.move(LatLng(pos.latitude, pos.longitude), 15.0);
+  }
 
   Future<void> _openLocationPicker() async {
     final location = await Navigator.push<LatLng>(
@@ -84,8 +98,8 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                    subdomains: const ['a', 'b', 'c', 'd'],
                     userAgentPackageName: 'com.example.memory_map',
                   ),
 
@@ -362,15 +376,32 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
 
-          // ── FAB ─────────────────────────────────────────────────────────
+          // ── FABs ────────────────────────────────────────────────────────
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 72),
-            child: FloatingActionButton(
-              onPressed: _openLocationPicker,
-              backgroundColor: const Color(0xFFFF6B6B),
-              foregroundColor: Colors.white,
-              elevation: 4,
-              child: const Icon(Icons.add_location_alt, size: 26),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // My location button
+                FloatingActionButton.small(
+                  heroTag: 'location',
+                  onPressed: _goToMyLocation,
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF1A535C),
+                  elevation: 3,
+                  child: const Icon(Icons.my_location, size: 20),
+                ),
+                const SizedBox(height: 12),
+                // Add pin button
+                FloatingActionButton(
+                  heroTag: 'addPin',
+                  onPressed: _openLocationPicker,
+                  backgroundColor: const Color(0xFFFF6B6B),
+                  foregroundColor: Colors.white,
+                  elevation: 4,
+                  child: const Icon(Icons.add_location_alt, size: 26),
+                ),
+              ],
             ),
           ),
         );
