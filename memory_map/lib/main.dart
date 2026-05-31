@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -191,43 +192,122 @@ class _AppShellState extends State<AppShell> {
     }
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
+      extendBody: true,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
+          // Floating Glassmorphic Bottom Nav
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(32),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                  child: Container(
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.92),
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.12),
+                          blurRadius: 24,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        _NavItem(
+                          icon: Icons.map_outlined,
+                          activeIcon: Icons.map,
+                          label: 'Map',
+                          isActive: _currentIndex == 0,
+                          onTap: () => setState(() => _currentIndex = 0),
+                        ),
+                        _NavItem(
+                          icon: Icons.explore_outlined,
+                          activeIcon: Icons.explore,
+                          label: 'Discover',
+                          isActive: _currentIndex == 1,
+                          onTap: () => setState(() => _currentIndex = 1),
+                        ),
+                        _NavItem(
+                          icon: Icons.people_outline,
+                          activeIcon: Icons.people,
+                          label: 'Friends',
+                          isActive: _currentIndex == 2,
+                          onTap: () => setState(() => _currentIndex = 2),
+                        ),
+                        _NavItem(
+                          icon: Icons.person_outline,
+                          activeIcon: Icons.person,
+                          label: 'Profile',
+                          isActive: _currentIndex == 3,
+                          onTap: () => setState(() => _currentIndex = 3),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
-              offset: const Offset(0, -4),
+    );
+  }
+}
+
+// Floating nav item
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const activeColor = Color(0xFF1A535C);
+    final inactiveColor = Colors.grey.shade400;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isActive ? activeIcon : icon,
+              color: isActive ? activeColor : inactiveColor,
+              size: 24,
             ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (i) => setState(() => _currentIndex = i),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map_outlined),
-              activeIcon: Icon(Icons.map),
-              label: 'Map',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.explore_outlined),
-              activeIcon: Icon(Icons.explore),
-              label: 'Discover',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people_outline),
-              activeIcon: Icon(Icons.people),
-              label: 'Friends',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: 'Profile',
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+                color: isActive ? activeColor : inactiveColor,
+              ),
             ),
           ],
         ),
