@@ -33,13 +33,22 @@ class SupabaseService {
     );
   }
 
+  Future<void> sendActivationEmail(String userId, String email, String name) async {
+    await _client.functions.invoke('send-activation', body: {
+      'userId': userId,
+      'email': email,
+      'name': name,
+    });
+  }
+
   // PROFILE
-  Future<void> upsertProfile(String userId, String name, String username, String avatar) async {
+  Future<void> upsertProfile(String userId, String name, String username, String avatar, {bool isActivated = false}) async {
     await _client.from('profiles').upsert({
       'id': userId,
       'name': name,
       'username': username,
       'avatar': avatar,
+      'is_activated': isActivated,
     });
   }
 

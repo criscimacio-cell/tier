@@ -69,48 +69,35 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Returns null = fully logged in, '__confirm__' = confirmation email sent, else error.
+  /// Returns null = logged in, '__confirm__' = activation email sent, else error message.
   Future<String?> signUp(String name, String email, String password) async {
     try {
       final res = await SupabaseService().signUp(email, password, name);
       if (res.user == null) return 'Sign up failed';
-      if (res.session == null) {
-        // Email confirmation required — profile will be created on first sign-in
-        return '__confirm__';
-      }
-      // Email confirmation disabled — immediately logged in
       final userId = res.user!.id;
       final avatar = _pickEmoji(name);
       final username = '@${name.toLowerCase().replaceAll(' ', '.')}';
-      await SupabaseService().upsertProfile(userId, name, username, avatar);
-      _user = AppUser(
-        id: userId,
-        name: name,
-        username: username,
-        avatarEmoji: avatar,
-        earnedBadgeIds: [],
-      );
-      _isLoggedIn = true;
-      notifyListeners();
-      return null;
+      // Create profile as inactive — activated by clicking the email link
+      await SupabaseService().upsertProfile(userId, name, username, avatar, isActivated: false);
+      // Send activation email via our custom Edge Function, then sign out
+      await SupabaseService().sendActivationEmail(userId, email, name);
+      await SupabaseService().signOut();
+      return '__confirm__';
     } catch (e) {
       return e.toString();
     }
   }
 
+  /// Returns null = logged in, '__not_activated__' = needs activation, else error.
   Future<String?> signIn(String email, String password) async {
     try {
       final res = await SupabaseService().signIn(email, password);
       if (res.user == null) return 'Sign in failed';
       final userId = res.user!.id;
-      var profile = await SupabaseService().getProfile(userId);
-      // Create profile on first login (e.g. after email confirmation)
-      if (profile == null) {
-        final name = res.user!.userMetadata?['name'] as String? ?? email.split('@').first;
-        final avatar = _pickEmoji(name);
-        final username = '@${name.toLowerCase().replaceAll(' ', '.')}';
-        await SupabaseService().upsertProfile(userId, name, username, avatar);
-        profile = {'name': name, 'username': username, 'avatar': avatar, 'streak': 0};
+      final profile = await SupabaseService().getProfile(userId);
+      if (profile == null || profile['is_activated'] != true) {
+        await SupabaseService().signOut();
+        return '__not_activated__';
       }
       _user = AppUser(
         id: userId,
@@ -129,27 +116,35 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> _loadUserFromSession(User supabaseUser) async {
-    var profile = await SupabaseService().getProfile(supabaseUser.id);
-    if (profile == null) {
-      final name = supabaseUser.userMetadata?['full_name'] as String? ??
-                   supabaseUser.userMetadata?['name'] as String? ??
-                   supabaseUser.email?.split('@').first ?? 'User';
-      final avatar = _pickEmoji(name);
-      final username = '@${name.toLowerCase().replaceAll(' ', '.')}';
-      try { await SupabaseService().upsertProfile(supabaseUser.id, name, username, avatar); } catch (_) {}
-      profile = {'name': name, 'username': username, 'avatar': avatar, 'streak': 0};
-    }
-    _user = AppUser(
-      id: supabaseUser.id,
-      name: profile['name'] ?? '',
-      username: profile['username'] ?? '',
-      avatarEmoji: profile['avatar'] ?? '🌍',
-      streak: profile['streak'] ?? 0,
-      earnedBadgeIds: [],
-    );
-    _isLoggedIn = true;
-    _onboardingComplete = true;
-    notifyListeners();
+    try {
+      var profile = await SupabaseService().getProfile(supabaseUser.id);
+      // Google sign-in: create profile on first login (auto-activated)
+      if (profile == null) {
+        final name = supabaseUser.userMetadata?['full_name'] as String? ??
+                     supabaseUser.userMetadata?['name'] as String? ??
+                     supabaseUser.email?.split('@').first ?? 'User';
+        final avatar = _pickEmoji(name);
+        final username = '@${name.toLowerCase().replaceAll(' ', '.')}';
+        try { await SupabaseService().upsertProfile(supabaseUser.id, name, username, avatar, isActivated: true); } catch (_) {}
+        profile = {'name': name, 'username': username, 'avatar': avatar, 'streak': 0, 'is_activated': true};
+      }
+      // Block unactivated accounts (email signups awaiting activation)
+      if (profile['is_activated'] != true) {
+        try { await SupabaseService().signOut(); } catch (_) {}
+        return;
+      }
+      _user = AppUser(
+        id: supabaseUser.id,
+        name: profile['name'] ?? '',
+        username: profile['username'] ?? '',
+        avatarEmoji: profile['avatar'] ?? '🌍',
+        streak: profile['streak'] ?? 0,
+        earnedBadgeIds: [],
+      );
+      _isLoggedIn = true;
+      _onboardingComplete = true;
+      notifyListeners();
+    } catch (_) {}
   }
 
   void restoreSession(User supabaseUser) {

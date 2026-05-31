@@ -65,6 +65,16 @@ class _LoginScreenState extends State<LoginScreen>
     );
     if (!mounted) return;
     setState(() => _loading = false);
+    if (error == '__not_activated__') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account not activated. Check your email for the activation link.'),
+          backgroundColor: Color(0xFFFF6B6B),
+          duration: Duration(seconds: 5),
+        ),
+      );
+      return;
+    }
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error), backgroundColor: const Color(0xFFFF6B6B)),
