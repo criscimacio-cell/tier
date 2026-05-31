@@ -5,29 +5,19 @@ import '../data/mock_data.dart';
 class UserProvider extends ChangeNotifier {
   AppUser _user = AppUser(
     id: kCurrentUserId,
-    name: 'Alex Mendoza',
-    username: '@alex.memorymap',
-    avatarEmoji: '🧳',
-    followingIds: ['friend_001', 'friend_002', 'friend_003'],
-    streak: 12,
-    lastLoggedVisit: DateTime.now().subtract(const Duration(days: 1)),
-    earnedBadgeIds: [
-      'badge_001',
-      'badge_002',
-      'badge_003',
-      'badge_004',
-      'badge_005',
-      'badge_006',
-    ],
+    name: '',
+    username: '',
+    avatarEmoji: '🌍',
+    earnedBadgeIds: [],
   );
 
-  final List<Friend> _friends = List.from(mockFriends);
-  List<AppBadge> _badges = List.from(mockBadges);
+  final List<Friend> _friends = [];
+  List<AppBadge> _badges = List.from(allBadges);
 
   bool _isLoggedIn = false;
   bool _onboardingComplete = false;
 
-  // ── Getters ──────────────────────────────────────────────────────────────
+  // ── Getters ───────────────────────────────────────────────────────────────
 
   AppUser get user => _user;
   List<Friend> get friends => _friends;
@@ -38,21 +28,17 @@ class UserProvider extends ChangeNotifier {
   List<AppBadge> get earnedBadges =>
       _badges.where((b) => _user.earnedBadgeIds.contains(b.id)).toList();
 
-  List<AppBadge> get unearnedBadges =>
-      _badges.where((b) => !_user.earnedBadgeIds.contains(b.id)).toList();
-
-  // Returns all friend pins combined
   List<MapPin> get allFriendPins =>
       _friends.expand((f) => f.pins).toList();
 
-  // ── Auth / Onboarding ─────────────────────────────────────────────────────
+  // ── Auth ──────────────────────────────────────────────────────────────────
 
-  void login(String name, String username) {
+  void login(String name, String email) {
     _user = AppUser(
       id: 'user_${DateTime.now().millisecondsSinceEpoch}',
       name: name,
-      username: '@${username.toLowerCase().replaceAll(' ', '.')}',
-      avatarEmoji: _randomEmoji(),
+      username: '@${name.toLowerCase().replaceAll(' ', '.')}',
+      avatarEmoji: _pickEmoji(name),
       streak: 0,
       earnedBadgeIds: [],
     );
@@ -65,35 +51,26 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _randomEmoji() {
-    const emojis = ['🦊', '🐻', '🦁', '🐨', '🦄', '🐸', '🦋', '🌻', '🍀', '🌙'];
-    return emojis[DateTime.now().millisecond % emojis.length];
+  String _pickEmoji(String name) {
+    const emojis = ['🦊', '🐻', '🦁', '🐨', '🦄', '🐸', '🦋', '🌻', '🍀', '🌙', '🎯', '🗺️'];
+    return emojis[name.codeUnits.fold(0, (a, b) => a + b) % emojis.length];
   }
 
-  // ── Streak ───────────────────────────────────────────────────────────────
+  // ── Streak ────────────────────────────────────────────────────────────────
 
   void updateStreak() {
     final now = DateTime.now();
     final last = _user.lastLoggedVisit;
-
     if (last == null) {
       _user = _user.copyWith(streak: 1, lastLoggedVisit: now);
       notifyListeners();
       return;
     }
-
     final daysSinceLast = now.difference(last).inDays;
-
-    if (daysSinceLast == 0) {
-      // Same day — no change
-      return;
-    } else if (daysSinceLast == 1) {
-      // Consecutive day
-      _user = _user.copyWith(streak: _user.streak + 1, lastLoggedVisit: now);
-    } else {
-      // Streak broken
-      _user = _user.copyWith(streak: 1, lastLoggedVisit: now);
-    }
+    if (daysSinceLast == 0) return;
+    _user = daysSinceLast == 1
+        ? _user.copyWith(streak: _user.streak + 1, lastLoggedVisit: now)
+        : _user.copyWith(streak: 1, lastLoggedVisit: now);
     notifyListeners();
   }
 
@@ -103,21 +80,9 @@ class UserProvider extends ChangeNotifier {
     if (_user.earnedBadgeIds.contains(badgeId)) return;
     final updated = List<String>.from(_user.earnedBadgeIds)..add(badgeId);
     _user = _user.copyWith(earnedBadgeIds: updated);
-
-    // Also update the badge list to mark as earned
-    _badges = _badges.map((b) {
-      if (b.id == badgeId) {
-        return AppBadge(
-          id: b.id,
-          name: b.name,
-          emoji: b.emoji,
-          description: b.description,
-          earned: true,
-        );
-      }
-      return b;
-    }).toList();
-
+    _badges = _badges.map((b) => b.id == badgeId
+        ? AppBadge(id: b.id, name: b.name, emoji: b.emoji, description: b.description, earned: true)
+        : b).toList();
     notifyListeners();
   }
 
@@ -136,24 +101,15 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  // ── Map overlap analysis ──────────────────────────────────────────────────
-
   Map<String, dynamic> compareWithFriend(String friendId, List<MapPin> myPins) {
     final friend = friendById(friendId);
     if (friend == null) return {};
-
     final myNames = myPins.map((p) => p.name.toLowerCase()).toSet();
     final friendNames = friend.pins.map((p) => p.name.toLowerCase()).toSet();
-    final overlap = myNames.intersection(friendNames);
-
-    final onlyMine = myPins.where((p) => !friendNames.contains(p.name.toLowerCase())).toList();
-    final onlyFriends = friend.pins.where((p) => !myNames.contains(p.name.toLowerCase())).toList();
-
     return {
-      'overlapCount': overlap.length,
-      'onlyMine': onlyMine,
-      'onlyFriend': onlyFriends,
-      'friendName': friend.name,
+      'overlapCount': myNames.intersection(friendNames).length,
+      'onlyMine': myPins.where((p) => !friendNames.contains(p.name.toLowerCase())).toList(),
+      'onlyFriend': friend.pins.where((p) => !myNames.contains(p.name.toLowerCase())).toList(),
     };
   }
 }

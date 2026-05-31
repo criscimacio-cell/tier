@@ -9,6 +9,7 @@ import '../providers/user_provider.dart';
 import '../widgets/category_filter_bar.dart';
 import '../widgets/time_slider.dart';
 import 'add_pin_screen.dart';
+import 'location_picker_screen.dart';
 import 'pin_detail_screen.dart';
 
 class MapScreen extends StatefulWidget {
@@ -21,37 +22,28 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   static const LatLng _defaultCenter = LatLng(14.5547, 121.0244);
   final MapController _mapController = MapController();
-  LatLng? _pendingPinLocation;
   bool _showTimeSlider = false;
-  bool _addingPin = false;
 
   DateTime get _latestDate => DateTime.now();
 
-  void _onMapTap(TapPosition tapPos, LatLng point) {
-    if (_addingPin) {
-      setState(() {
-        _pendingPinLocation = point;
-        _addingPin = false;
-      });
-      _showAddPinSheet(point);
-    }
-  }
-
-  Future<void> _showAddPinSheet(LatLng location) async {
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => DraggableScrollableSheet(
-        initialChildSize: 0.85,
-        minChildSize: 0.5,
-        maxChildSize: 0.97,
-        builder: (ctx, sc) => AddPinScreen(initialLocation: location),
-      ),
+  Future<void> _openLocationPicker() async {
+    final location = await Navigator.push<LatLng>(
+      context,
+      MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
     );
-    setState(() {
-      _pendingPinLocation = null;
-    });
+    if (location != null && mounted) {
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => DraggableScrollableSheet(
+          initialChildSize: 0.85,
+          minChildSize: 0.5,
+          maxChildSize: 0.97,
+          builder: (ctx, sc) => AddPinScreen(initialLocation: location),
+        ),
+      );
+    }
   }
 
   void _showPinDetail(MapPin pin) {
@@ -88,7 +80,7 @@ class _MapScreenState extends State<MapScreen> {
                   initialZoom: 13.0,
                   minZoom: 10,
                   maxZoom: 18,
-                  onTap: _onMapTap,
+                  onTap: null,
                 ),
                 children: [
                   TileLayer(
@@ -140,27 +132,11 @@ class _MapScreenState extends State<MapScreen> {
                     }).toList(),
                   ),
 
-                  // Pending pin indicator
-                  if (_pendingPinLocation != null)
-                    MarkerLayer(
-                      markers: [
-                        Marker(
-                          point: _pendingPinLocation!,
-                          width: 40,
-                          height: 40,
-                          child: const Icon(
-                            Icons.add_location,
-                            color: Color(0xFFFF6B6B),
-                            size: 40,
-                          ),
-                        ),
-                      ],
-                    ),
                 ],
               ),
 
               // ── EMPTY STATE OVERLAY ───────────────────────────────────────
-              if (isEmpty && !_addingPin)
+              if (isEmpty)
                 Center(
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -383,50 +359,6 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               ),
 
-              // ── ADD PIN MODE BANNER ───────────────────────────────────────
-              if (_addingPin)
-                Positioned(
-                  top: 120 + MediaQuery.of(context).padding.top,
-                  left: 30,
-                  right: 30,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFF6B6B),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFFF6B6B).withValues(alpha: 0.4),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.touch_app,
-                            color: Colors.white, size: 18),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'Tap on the map to place your pin',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const Spacer(),
-                        GestureDetector(
-                          onTap: () => setState(() => _addingPin = false),
-                          child: const Icon(Icons.close,
-                              color: Colors.white, size: 18),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
             ],
           ),
 
@@ -434,20 +366,11 @@ class _MapScreenState extends State<MapScreen> {
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 72),
             child: FloatingActionButton(
-              onPressed: () {
-                if (_addingPin) {
-                  setState(() => _addingPin = false);
-                } else {
-                  setState(() => _addingPin = true);
-                }
-              },
+              onPressed: _openLocationPicker,
               backgroundColor: const Color(0xFFFF6B6B),
               foregroundColor: Colors.white,
               elevation: 4,
-              child: Icon(
-                _addingPin ? Icons.close : Icons.add_location_alt,
-                size: 26,
-              ),
+              child: const Icon(Icons.add_location_alt, size: 26),
             ),
           ),
         );
