@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
+import 'app_shell.dart';
+import 'onboarding_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,14 +27,33 @@ class _LoginScreenState extends State<LoginScreen>
   bool _obscureSignUp = true;
   bool _loading = false;
 
+  void _onAuthChanged() {
+    if (!mounted) return;
+    final userP = context.read<UserProvider>();
+    if (!userP.isLoggedIn) return;
+    final dest = userP.onboardingComplete
+        ? const AppShell()
+        : const OnboardingScreen();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => dest),
+      (_) => false,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<UserProvider>().addListener(_onAuthChanged);
+    });
   }
 
   @override
   void dispose() {
+    try {
+      context.read<UserProvider>().removeListener(_onAuthChanged);
+    } catch (_) {}
     _tabController.dispose();
     _signInEmailCtrl.dispose();
     _signInPasswordCtrl.dispose();
@@ -80,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen>
       );
       return;
     }
-    // Navigation is handled by Consumer in main.dart once _isLoggedIn = true
+    // Navigation triggered by _onAuthChanged listener
   }
 
   void _signUp() async {
