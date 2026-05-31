@@ -30,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: const Color(0xFFF7F3E9),
           body: CustomScrollView(
             slivers: [
-              // ── Editorial Header ──────────────────────────────────────────
+              // Editorial Header
               SliverToBoxAdapter(
                 child: _ProfileHeader(
                   user: user,
@@ -167,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-// ── Editorial profile header ──────────────────────────────────────────────────
+// Editorial profile header
 
 class _ProfileHeader extends StatelessWidget {
   final AppUser user;
@@ -184,9 +184,9 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Total height = dark header (280) + half stats card overlap (42)
+    // Total height = dark header (280) + stats card overlap
     return SizedBox(
-      height: 322,
+      height: 340,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -314,14 +314,14 @@ class _ProfileHeader extends StatelessWidget {
 
           // Stats card — overlaps the dark header bottom
           Positioned(
-            top: 258,
+            top: 262,
             left: 20,
             right: 20,
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 18),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -332,13 +332,11 @@ class _ProfileHeader extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _StatBox(value: '$pinsCount', label: 'Places'),
+                  _StatBox(value: '$pinsCount', label: 'Pins'),
                   _StatDivider(),
                   _StatBox(value: '$totalVisits', label: 'Visits'),
                   _StatDivider(),
                   _StatBox(value: '$citiesCount', label: 'Cities'),
-                  _StatDivider(),
-                  const _StatBox(value: '1', label: 'Country'),
                 ],
               ),
             ),
@@ -349,7 +347,7 @@ class _ProfileHeader extends StatelessWidget {
   }
 }
 
-// ── Stat components ───────────────────────────────────────────────────────────
+// Stat components
 
 class _StatBox extends StatelessWidget {
   final String value;
@@ -360,16 +358,17 @@ class _StatBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             value,
             style: const TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              fontSize: 28,
               color: Color(0xFF1A535C),
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(

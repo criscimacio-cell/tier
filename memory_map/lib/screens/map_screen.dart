@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart' hide Path;
 import 'package:provider/provider.dart';
 import '../models/models.dart';
@@ -25,7 +27,18 @@ class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
   bool _showTimeSlider = false;
 
+  // Search state
+  bool _showSearch = false;
+  List<Map<String, dynamic>> _searchResults = [];
+  final _searchCtrl = TextEditingController();
+
   DateTime get _latestDate => DateTime.now();
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
 
   Future<void> _goToMyLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -74,6 +87,20 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  Future<void> _searchPlaces(String query) async {
+    if (query.length < 3) {
+      setState(() => _searchResults = []);
+      return;
+    }
+    final uri = Uri.parse(
+        'https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(query)}&format=json&limit=5');
+    final res = await http.get(uri, headers: {'User-Agent': 'MemoryMap/1.0'});
+    if (res.statusCode == 200) {
+      final data = jsonDecode(res.body) as List;
+      setState(() => _searchResults = data.cast<Map<String, dynamic>>());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<PinsProvider, UserProvider>(
@@ -86,7 +113,7 @@ class _MapScreenState extends State<MapScreen> {
         return Scaffold(
           body: Stack(
             children: [
-              // ── MAP ──────────────────────────────────────────────────────
+              // MAP
               FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
@@ -145,11 +172,10 @@ class _MapScreenState extends State<MapScreen> {
                       );
                     }).toList(),
                   ),
-
                 ],
               ),
 
-              // ── EMPTY STATE OVERLAY ───────────────────────────────────────
+              // EMPTY STATE OVERLAY
               if (isEmpty)
                 Center(
                   child: Container(
@@ -188,7 +214,7 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                 ),
 
-              // ── FLOATING PILL HEADER ──────────────────────────────────────
+              // FLOATING PILL HEADER
               Positioned(
                 top: 52,
                 left: 0,
@@ -229,6 +255,27 @@ class _MapScreenState extends State<MapScreen> {
                                 textAlign: TextAlign.center,
                               ),
                             ),
+                            // Search toggle button
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                  minWidth: 36, minHeight: 36),
+                              onPressed: () {
+                                setState(() {
+                                  _showSearch = !_showSearch;
+                                  if (!_showSearch) {
+                                    _searchCtrl.clear();
+                                    _searchResults = [];
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                _showSearch ? Icons.close : Icons.search,
+                                color: Colors.white.withValues(alpha: 0.8),
+                                size: 20,
+                              ),
+                            ),
+                            // Notification bell
                             IconButton(
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(
@@ -249,57 +296,148 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               ),
 
-              // ── FRIENDS TOGGLE (below pill) ───────────────────────────────
+              // SEARCH BAR (below pill)
               Positioned(
                 top: 52 + 56,
-                right: 16,
-                child: GestureDetector(
-                  onTap: () => pinsP.toggleFriendPins(),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 7),
-                    decoration: BoxDecoration(
-                      color: pinsP.showFriendPins
-                          ? Colors.white
-                          : const Color(0xFF0A1628).withValues(alpha: 0.75),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.15),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.people,
-                          size: 16,
-                          color: pinsP.showFriendPins
-                              ? const Color(0xFF1A535C)
-                              : Colors.white,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Friends',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: pinsP.showFriendPins
-                                ? const Color(0xFF1A535C)
-                                : Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                left: 0,
+                right: 0,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: _showSearch
+                      ? Column(
+                          key: const ValueKey('search_open'),
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: TextField(
+                                controller: _searchCtrl,
+                                autofocus: true,
+                                decoration: const InputDecoration(
+                                  hintText: 'Search places...',
+                                  border: InputBorder.none,
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                                onChanged: (val) {
+                                  
+                                  _searchPlaces(val);
+                                },
+                              ),
+                            ),
+                            if (_searchResults.isNotEmpty)
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.12),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: _searchResults.length,
+                                  itemBuilder: (ctx, i) {
+                                    final result = _searchResults[i];
+                                    return ListTile(
+                                      dense: true,
+                                      leading: const Icon(Icons.place_outlined, color: Color(0xFF1A535C), size: 20),
+                                      title: Text(
+                                        result['display_name'] ?? '',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                      onTap: () {
+                                        final lat = double.parse(result['lat'] as String);
+                                        final lon = double.parse(result['lon'] as String);
+                                        _mapController.move(LatLng(lat, lon), 14);
+                                        setState(() {
+                                          _searchResults = [];
+                                          _showSearch = false;
+                                          _searchCtrl.clear();
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                          ],
+                        )
+                      : const SizedBox.shrink(key: ValueKey('search_closed')),
                 ),
               ),
 
-              // ── BOTTOM FILTER + TIME SLIDER ───────────────────────────────
+              // FRIENDS TOGGLE (below pill)
+              Positioned(
+                top: 52 + 56,
+                right: 16,
+                child: _showSearch
+                    ? const SizedBox.shrink()
+                    : GestureDetector(
+                        onTap: () => pinsP.toggleFriendPins(),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: pinsP.showFriendPins
+                                ? Colors.white
+                                : const Color(0xFF0A1628).withValues(alpha: 0.75),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.15),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.people,
+                                size: 16,
+                                color: pinsP.showFriendPins
+                                    ? const Color(0xFF1A535C)
+                                    : Colors.white,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Friends',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: pinsP.showFriendPins
+                                      ? const Color(0xFF1A535C)
+                                      : Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+              ),
+
+              // BOTTOM FILTER + TIME SLIDER
               Positioned(
                 bottom: 80,
                 left: 0,
@@ -372,11 +510,10 @@ class _MapScreenState extends State<MapScreen> {
                   ],
                 ),
               ),
-
             ],
           ),
 
-          // ── FABs ────────────────────────────────────────────────────────
+          // FABs
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 72),
             child: Column(
@@ -410,9 +547,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 
-// ── Custom pin marker widget ──────────────────────────────────────────────────
+// Custom pin marker widget - animated emoji bubble
 
-class _PinMarker extends StatelessWidget {
+class _PinMarker extends StatefulWidget {
   final MapPin pin;
   final Color color;
   final bool isFriend;
@@ -426,66 +563,88 @@ class _PinMarker extends StatelessWidget {
   });
 
   @override
+  State<_PinMarker> createState() => _PinMarkerState();
+}
+
+class _PinMarkerState extends State<_PinMarker>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 400));
+    _scale = CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut);
+    _ctrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final double emojiFontSize = widget.isFriend ? 12 : 14;
+    final double textFontSize = widget.isFriend ? 9 : 10;
+
     return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Label
-          Container(
-            constraints: const BoxConstraints(maxWidth: 90),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.9),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Text(
-              '${pin.category.emoji} ${pin.name}',
-              style: const TextStyle(
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A2E),
+      onTap: widget.onTap,
+      child: ScaleTransition(
+        scale: _scale,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Bubble
+            Container(
+              constraints: const BoxConstraints(maxWidth: 100),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white, width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.color.withValues(alpha: 0.4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.pin.category.emoji,
+                    style: TextStyle(fontSize: emojiFontSize),
+                  ),
+                  const SizedBox(width: 4),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 70),
+                    child: Text(
+                      widget.pin.name,
+                      style: TextStyle(
+                        fontSize: textFontSize,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1A1A2E),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 2),
-          // Pin circle
-          Container(
-            width: isFriend ? 18 : 22,
-            height: isFriend ? 18 : 22,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-              boxShadow: [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.4),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+            // Triangle tail
+            CustomPaint(
+              size: const Size(8, 5),
+              painter: _PinTailPainter(color: widget.color),
             ),
-            child: pin.isPrivate
-                ? const Icon(Icons.lock, size: 10, color: Colors.white)
-                : null,
-          ),
-          // Tail
-          CustomPaint(
-            size: const Size(10, 6),
-            painter: _PinTailPainter(color: color),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

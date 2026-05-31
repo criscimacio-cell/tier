@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
-import 'onboarding_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -122,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen>
                 color: const Color(0xFF1A535C).withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Center(child: Text('📧', style: TextStyle(fontSize: 32))),
+              child: const Center(child: Text('\u{1F4E7}', style: TextStyle(fontSize: 32))),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -163,163 +162,226 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F3E9),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // ── Header ─────────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 48, 24, 36),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1A535C),
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF1A535C).withValues(alpha: 0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text('🗺️', style: TextStyle(fontSize: 40)),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'memorymap',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFF1A535C),
-                        letterSpacing: -1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'every place, a story.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade500,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
+      backgroundColor: const Color(0xFF0A1628),
+      body: Stack(
+        children: [
+          // Background gradient
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF0A1628), Color(0xFF1A535C)],
                 ),
               ),
-
-              // ── Card ───────────────────────────────────────────────────
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.07),
-                      blurRadius: 24,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Tab switcher
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF0EDE8),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: TabBar(
-                        controller: _tabController,
-                        indicator: BoxDecoration(
-                          color: const Color(0xFF1A535C),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.grey.shade600,
-                        labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-                        dividerColor: Colors.transparent,
-                        tabs: const [Tab(text: 'Sign In'), Tab(text: 'Sign Up')],
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 320,
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          _SignInForm(
-                            formKey: _signInFormKey,
-                            emailCtrl: _signInEmailCtrl,
-                            passwordCtrl: _signInPasswordCtrl,
-                            obscure: _obscureSignIn,
-                            onToggleObscure: () => setState(() => _obscureSignIn = !_obscureSignIn),
-                            loading: _loading,
-                            onSubmit: _signIn,
-                          ),
-                          _SignUpForm(
-                            formKey: _signUpFormKey,
-                            nameCtrl: _signUpNameCtrl,
-                            emailCtrl: _signUpEmailCtrl,
-                            passwordCtrl: _signUpPasswordCtrl,
-                            obscure: _obscureSignUp,
-                            onToggleObscure: () => setState(() => _obscureSignUp = !_obscureSignUp),
-                            loading: _loading,
-                            onSubmit: _signUp,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-              // ── OR divider ─────────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(child: Divider(color: Colors.grey.shade300)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Text('or', style: TextStyle(color: Colors.grey.shade400, fontSize: 13)),
-                    ),
-                    Expanded(child: Divider(color: Colors.grey.shade300)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              // ── Google button ──────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: _GoogleButton(loading: _loading, onTap: _signInWithGoogle),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Your memories stay on your device.',
-                style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
-              ),
-              const SizedBox(height: 32),
-            ],
+            ),
           ),
-        ),
+          // Subtle depth circles
+          Positioned(
+            top: -80,
+            right: -60,
+            child: Container(
+              width: 280,
+              height: 280,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.03),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 80,
+            left: -100,
+            child: Container(
+              width: 320,
+              height: 320,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.04),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 200,
+            left: -40,
+            child: Container(
+              width: 180,
+              height: 180,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.02),
+              ),
+            ),
+          ),
+          // Content
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 48, 24, 36),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1A535C),
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF1A535C).withValues(alpha: 0.4),
+                                blurRadius: 24,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Text('\u{1F5FA}️', style: TextStyle(fontSize: 40)),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'memorymap',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            letterSpacing: -2,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'every place, a story.',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white54,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Tab card
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A2744),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          blurRadius: 24,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Tab switcher
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0A1628),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: TabBar(
+                            controller: _tabController,
+                            indicator: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            labelColor: const Color(0xFF1A535C),
+                            unselectedLabelColor: Colors.white54,
+                            labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                            dividerColor: Colors.transparent,
+                            tabs: const [Tab(text: 'Sign In'), Tab(text: 'Sign Up')],
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 320,
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _SignInForm(
+                                formKey: _signInFormKey,
+                                emailCtrl: _signInEmailCtrl,
+                                passwordCtrl: _signInPasswordCtrl,
+                                obscure: _obscureSignIn,
+                                onToggleObscure: () => setState(() => _obscureSignIn = !_obscureSignIn),
+                                loading: _loading,
+                                onSubmit: _signIn,
+                              ),
+                              _SignUpForm(
+                                formKey: _signUpFormKey,
+                                nameCtrl: _signUpNameCtrl,
+                                emailCtrl: _signUpEmailCtrl,
+                                passwordCtrl: _signUpPasswordCtrl,
+                                obscure: _obscureSignUp,
+                                onToggleObscure: () => setState(() => _obscureSignUp = !_obscureSignUp),
+                                loading: _loading,
+                                onSubmit: _signUp,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                  // OR divider
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.12))),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          child: Text(
+                            'or',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.38),
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.12))),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Google button
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: _GoogleButton(loading: _loading, onTap: _signInWithGoogle),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Your memories stay on your device.',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.30),
+                      fontSize: 12,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-// ── Sign In form ────────────────────────────────────────────────────────────
+// Sign In form
 
 class _SignInForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -358,7 +420,7 @@ class _SignInForm extends StatelessWidget {
               icon: Icons.lock_outline,
               obscure: obscure,
               suffixIcon: IconButton(
-                icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 20, color: Colors.grey),
+                icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 20, color: Colors.white54),
                 onPressed: onToggleObscure,
               ),
               validator: (v) => (v == null || v.length < 6) ? 'Min 6 characters' : null,
@@ -372,7 +434,7 @@ class _SignInForm extends StatelessWidget {
   }
 }
 
-// ── Sign Up form ────────────────────────────────────────────────────────────
+// Sign Up form
 
 class _SignUpForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -421,7 +483,7 @@ class _SignUpForm extends StatelessWidget {
               icon: Icons.lock_outline,
               obscure: obscure,
               suffixIcon: IconButton(
-                icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 20, color: Colors.grey),
+                icon: Icon(obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 20, color: Colors.white54),
                 onPressed: onToggleObscure,
               ),
               validator: (v) => (v == null || v.length < 6) ? 'Min 6 characters' : null,
@@ -435,7 +497,7 @@ class _SignUpForm extends StatelessWidget {
   }
 }
 
-// ── Shared widgets ──────────────────────────────────────────────────────────
+// Shared widgets
 
 class _Field extends StatelessWidget {
   final TextEditingController controller;
@@ -461,29 +523,33 @@ class _Field extends StatelessWidget {
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
       validator: validator,
-      style: const TextStyle(fontSize: 15),
+      style: const TextStyle(fontSize: 15, color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, size: 20, color: Colors.grey.shade500),
+        prefixIcon: Icon(icon, size: 20, color: Colors.white54),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: const Color(0xFFF7F3E9),
-        labelStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+        fillColor: const Color(0xFF1A2744),
+        labelStyle: const TextStyle(color: Colors.white54, fontSize: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade200),
+          borderSide: const BorderSide(color: Color(0xFF2A3F5F)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade200),
+          borderSide: const BorderSide(color: Color(0xFF2A3F5F)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF1A535C), width: 1.5),
+          borderSide: const BorderSide(color: Colors.white, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFFFF6B6B)),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFFF6B6B), width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
@@ -505,8 +571,8 @@ class _GoogleButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: loading ? null : onTap,
         style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.white,
-          side: BorderSide(color: Colors.grey.shade300),
+          backgroundColor: const Color(0xFF1A2744),
+          side: const BorderSide(color: Colors.white),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
         child: Row(
@@ -530,7 +596,7 @@ class _GoogleButton extends StatelessWidget {
               'Continue with Google',
               style: TextStyle(
                 fontSize: 15, fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A2E),
+                color: Colors.white,
               ),
             ),
           ],
