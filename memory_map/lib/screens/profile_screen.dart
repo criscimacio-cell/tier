@@ -210,15 +210,27 @@ class _ProfileHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 8),
-                    // Settings button top-right
+                    // Settings + Logout buttons top-right
                     Align(
                       alignment: Alignment.topRight,
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: IconButton(
-                          icon: const Icon(Icons.settings_outlined,
-                              color: Colors.white54),
-                          onPressed: () {},
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.settings_outlined,
+                                  color: Colors.white54),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.logout,
+                                  color: Colors.white70, size: 20),
+                              onPressed: () async {
+                                await context.read<UserProvider>().signOut();
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),

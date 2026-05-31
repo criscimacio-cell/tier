@@ -46,39 +46,38 @@ class _LoginScreenState extends State<LoginScreen>
   void _signIn() async {
     if (!_signInFormKey.currentState!.validate()) return;
     setState(() => _loading = true);
-    await Future.delayed(const Duration(milliseconds: 600));
-    if (!mounted) return;
-    final emailPrefix = _signInEmailCtrl.text.split('@').first;
-    final name = emailPrefix
-        .replaceAll('.', ' ')
-        .replaceAll('_', ' ')
-        .split(' ')
-        .map((w) => w.isEmpty ? '' : '${w[0].toUpperCase()}${w.substring(1)}')
-        .join(' ');
-    context.read<UserProvider>().login(name, _signInEmailCtrl.text);
-    setState(() => _loading = false);
-    if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+    final error = await context.read<UserProvider>().signIn(
+      _signInEmailCtrl.text.trim(),
+      _signInPasswordCtrl.text,
     );
+    if (!mounted) return;
+    setState(() => _loading = false);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error), backgroundColor: const Color(0xFFFF6B6B)),
+      );
+      return;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const OnboardingScreen()));
   }
 
   void _signUp() async {
     if (!_signUpFormKey.currentState!.validate()) return;
     setState(() => _loading = true);
-    await Future.delayed(const Duration(milliseconds: 600));
-    if (!mounted) return;
-    context.read<UserProvider>().login(
+    final error = await context.read<UserProvider>().signUp(
       _signUpNameCtrl.text.trim(),
       _signUpEmailCtrl.text.trim(),
+      _signUpPasswordCtrl.text,
     );
-    setState(() => _loading = false);
     if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-    );
+    setState(() => _loading = false);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error), backgroundColor: const Color(0xFFFF6B6B)),
+      );
+      return;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const OnboardingScreen()));
   }
 
   @override

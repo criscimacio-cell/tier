@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'providers/pins_provider.dart';
 import 'providers/user_provider.dart';
 import 'screens/map_screen.dart';
@@ -10,13 +11,17 @@ import 'screens/profile_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/onboarding_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ),
+  );
+  await Supabase.initialize(
+    url: 'https://uhhvsyzhguwcagniydfr.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoaHZzeXpoZ3V3Y2Fnbml5ZGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNzQ4NDgsImV4cCI6MjA5NTc1MDg0OH0.OVGO4X7g3yblER5M9N95PhF9cwWyt1FHf1fZ4d6A90Q',
   );
   runApp(const MemoryMapApp());
 }
@@ -36,13 +41,16 @@ class MemoryMapApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
         home: Consumer<UserProvider>(
-          builder: (_, userP, __) {
-            if (!userP.isLoggedIn) {
-              return const LoginScreen();
+          builder: (ctx, userP, _) {
+            // Auto-restore Supabase session
+            final supabaseUser = Supabase.instance.client.auth.currentUser;
+            if (supabaseUser != null && !userP.isLoggedIn) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                userP.restoreSession(supabaseUser);
+              });
             }
-            if (!userP.onboardingComplete) {
-              return const OnboardingScreen();
-            }
+            if (!userP.isLoggedIn) return const LoginScreen();
+            if (!userP.onboardingComplete) return const OnboardingScreen();
             return const AppShell();
           },
         ),
@@ -132,10 +140,11 @@ class _AppShellState extends State<AppShell> {
 
   Future<void> _initData() async {
     final pinsProvider = context.read<PinsProvider>();
-    await pinsProvider.loadFromStorage();
-    if (mounted) {
-      setState(() => _initialized = true);
+    final userProvider = context.read<UserProvider>();
+    if (userProvider.user.id.isNotEmpty) {
+      await pinsProvider.loadPins(userProvider.user.id);
     }
+    if (mounted) setState(() => _initialized = true);
   }
 
   @override

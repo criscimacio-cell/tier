@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
-import '../data/storage.dart';
+import '../services/supabase_service.dart';
 
 class PinsProvider extends ChangeNotifier {
   List<MapPin> _pins = [];
@@ -59,42 +59,72 @@ class PinsProvider extends ChangeNotifier {
 
   // ── Initialization ────────────────────────────────────────────────────────
 
-  Future<void> loadFromStorage() async {
-    final stored = await PinsStorage.loadPins();
-    _pins = stored; // empty list if first run — no defaults
-    _isLoaded = true;
-    notifyListeners();
+  Future<void> loadPins(String userId) async {
+    try {
+      final rows = await SupabaseService().getPins(userId);
+      List<MapPin> loaded = [];
+      for (final row in rows) {
+        final visitRows = await SupabaseService().getVisits(row['id'] as String);
+        final visits = visitRows.map((v) => Visit(
+          id: v['id'] as String,
+          date: DateTime.parse(v['visit_date'] as String),
+          review: v['review'] ?? '',
+          mood: Mood.values[(v['mood'] as int?) ?? 0],
+          journalEntry: v['journal_entry'] ?? '',
+        )).toList();
+        loaded.add(MapPin(
+          id: row['id'] as String,
+          userId: row['user_id'] as String,
+          lat: (row['lat'] as num).toDouble(),
+          lng: (row['lng'] as num).toDouble(),
+          name: row['name'] as String,
+          category: Category.values[(row['category'] as int?) ?? 0],
+          address: row['address'] ?? '',
+          isPrivate: row['is_private'] ?? false,
+          rating: (row['rating'] as num?)?.toDouble() ?? 0.0,
+          priceRange: PriceRange.values[(row['price_range'] as int?) ?? 0],
+          visits: visits,
+          createdAt: DateTime.parse(row['created_at'] as String),
+        ));
+      }
+      _pins = loaded;
+      _isLoaded = true;
+      notifyListeners();
+    } catch (e) {
+      _isLoaded = true;
+      notifyListeners();
+    }
   }
 
   // ── Mutations ─────────────────────────────────────────────────────────────
 
   Future<void> addPin(MapPin pin) async {
-    _pins.add(pin);
-    await PinsStorage.savePins(_pins);
+    _pins.insert(0, pin);
     notifyListeners();
+    await SupabaseService().insertPin(pin);
   }
 
   Future<void> addVisit(String pinId, Visit visit) async {
     final idx = _pins.indexWhere((p) => p.id == pinId);
     if (idx == -1) return;
-    final updatedVisits = List<Visit>.from(_pins[idx].visits)..add(visit);
-    _pins[idx] = _pins[idx].copyWith(visits: updatedVisits);
-    await PinsStorage.savePins(_pins);
+    final updated = _pins[idx].copyWith(visits: [..._pins[idx].visits, visit]);
+    _pins[idx] = updated;
     notifyListeners();
+    await SupabaseService().insertVisit(visit, pinId, _pins[idx].userId);
   }
 
   Future<void> removePin(String pinId) async {
     _pins.removeWhere((p) => p.id == pinId);
-    await PinsStorage.savePins(_pins);
     notifyListeners();
+    await SupabaseService().deletePin(pinId);
   }
 
   Future<void> togglePrivacy(String pinId) async {
     final idx = _pins.indexWhere((p) => p.id == pinId);
     if (idx == -1) return;
     _pins[idx] = _pins[idx].copyWith(isPrivate: !_pins[idx].isPrivate);
-    await PinsStorage.savePins(_pins);
     notifyListeners();
+    await SupabaseService().updatePin(_pins[idx]);
   }
 
   // ── Filters ───────────────────────────────────────────────────────────────

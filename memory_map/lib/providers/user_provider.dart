@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/models.dart';
 import '../data/mock_data.dart';
+import '../services/supabase_service.dart';
 
 class UserProvider extends ChangeNotifier {
   AppUser _user = AppUser(
@@ -33,6 +35,7 @@ class UserProvider extends ChangeNotifier {
 
   // ── Auth ──────────────────────────────────────────────────────────────────
 
+  /// Legacy login method (kept for compatibility, delegates to signIn/signUp).
   void login(String name, String email) {
     _user = AppUser(
       id: 'user_${DateTime.now().millisecondsSinceEpoch}',
@@ -43,6 +46,90 @@ class UserProvider extends ChangeNotifier {
       earnedBadgeIds: [],
     );
     _isLoggedIn = true;
+    notifyListeners();
+  }
+
+  Future<String?> signUp(String name, String email, String password) async {
+    try {
+      final res = await SupabaseService().signUp(email, password, name);
+      if (res.user != null) {
+        final userId = res.user!.id;
+        final avatar = _pickEmoji(name);
+        await SupabaseService().upsertProfile(
+          userId,
+          name,
+          '@${name.toLowerCase().replaceAll(' ', '.')}',
+          avatar,
+        );
+        _user = AppUser(
+          id: userId,
+          name: name,
+          username: '@${name.toLowerCase().replaceAll(' ', '.')}',
+          avatarEmoji: avatar,
+          earnedBadgeIds: [],
+        );
+        _isLoggedIn = true;
+        notifyListeners();
+        return null; // null = success
+      }
+      return 'Sign up failed';
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> signIn(String email, String password) async {
+    try {
+      final res = await SupabaseService().signIn(email, password);
+      if (res.user != null) {
+        final userId = res.user!.id;
+        final profile = await SupabaseService().getProfile(userId);
+        final name = profile?['name'] ?? email.split('@').first;
+        final username = profile?['username'] ?? '@user';
+        final avatar = profile?['avatar'] ?? '🌍';
+        final streak = profile?['streak'] ?? 0;
+        _user = AppUser(
+          id: userId,
+          name: name,
+          username: username,
+          avatarEmoji: avatar,
+          streak: streak,
+          earnedBadgeIds: [],
+        );
+        _isLoggedIn = true;
+        notifyListeners();
+        return null;
+      }
+      return 'Sign in failed';
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  void restoreSession(User supabaseUser) {
+    _isLoggedIn = true;
+    _onboardingComplete = true;
+    _user = AppUser(
+      id: supabaseUser.id,
+      name: supabaseUser.userMetadata?['name'] ?? '',
+      username: '',
+      avatarEmoji: '🌍',
+      earnedBadgeIds: [],
+    );
+    notifyListeners();
+  }
+
+  Future<void> signOut() async {
+    await SupabaseService().signOut();
+    _isLoggedIn = false;
+    _onboardingComplete = false;
+    _user = AppUser(
+      id: '',
+      name: '',
+      username: '',
+      avatarEmoji: '🌍',
+      earnedBadgeIds: [],
+    );
     notifyListeners();
   }
 
