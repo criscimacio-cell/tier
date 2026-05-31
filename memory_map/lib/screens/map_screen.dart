@@ -118,16 +118,18 @@ class _MapScreenState extends State<MapScreen> {
                 mapController: _mapController,
                 options: MapOptions(
                   initialCenter: _defaultCenter,
-                  initialZoom: 13.0,
-                  minZoom: 10,
-                  maxZoom: 18,
+                  initialZoom: 14.0,
+                  minZoom: 3,
+                  maxZoom: 20,
                   onTap: null,
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                    urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}@2x.png',
                     subdomains: const ['a', 'b', 'c', 'd'],
+                    retinaMode: true,
                     userAgentPackageName: 'com.example.memory_map',
+                    maxZoom: 20,
                   ),
 
                   // Friend pins layer
