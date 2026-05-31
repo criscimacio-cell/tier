@@ -26,6 +26,13 @@ class SupabaseService {
 
   Future<void> signOut() async => await _client.auth.signOut();
 
+  Future<void> signInWithGoogle() async {
+    await _client.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: 'com.example.memorymap://login-callback',
+    );
+  }
+
   // PROFILE
   Future<void> upsertProfile(String userId, String name, String username, String avatar) async {
     await _client.from('profiles').upsert({

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/models.dart';
@@ -6,7 +7,7 @@ import '../services/supabase_service.dart';
 
 class UserProvider extends ChangeNotifier {
   AppUser _user = AppUser(
-    id: kCurrentUserId,
+    id: '',
     name: '',
     username: '',
     avatarEmoji: '🌍',
@@ -18,6 +19,25 @@ class UserProvider extends ChangeNotifier {
 
   bool _isLoggedIn = false;
   bool _onboardingComplete = false;
+  late final StreamSubscription<AuthState> _authSub;
+
+  UserProvider() {
+    _authSub = SupabaseService().authStateChanges.listen((state) {
+      if (state.event == AuthChangeEvent.signedIn && !_isLoggedIn && state.session != null) {
+        _loadUserFromSession(state.session!.user);
+      } else if (state.event == AuthChangeEvent.signedOut) {
+        _isLoggedIn = false;
+        _onboardingComplete = false;
+        notifyListeners();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSub.cancel();
+    super.dispose();
+  }
 
   // ── Getters ───────────────────────────────────────────────────────────────
 
@@ -108,17 +128,41 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  void restoreSession(User supabaseUser) {
-    _isLoggedIn = true;
-    _onboardingComplete = true;
+  Future<void> _loadUserFromSession(User supabaseUser) async {
+    var profile = await SupabaseService().getProfile(supabaseUser.id);
+    if (profile == null) {
+      final name = supabaseUser.userMetadata?['full_name'] as String? ??
+                   supabaseUser.userMetadata?['name'] as String? ??
+                   supabaseUser.email?.split('@').first ?? 'User';
+      final avatar = _pickEmoji(name);
+      final username = '@${name.toLowerCase().replaceAll(' ', '.')}';
+      try { await SupabaseService().upsertProfile(supabaseUser.id, name, username, avatar); } catch (_) {}
+      profile = {'name': name, 'username': username, 'avatar': avatar, 'streak': 0};
+    }
     _user = AppUser(
       id: supabaseUser.id,
-      name: supabaseUser.userMetadata?['name'] ?? '',
-      username: '',
-      avatarEmoji: '🌍',
+      name: profile['name'] ?? '',
+      username: profile['username'] ?? '',
+      avatarEmoji: profile['avatar'] ?? '🌍',
+      streak: profile['streak'] ?? 0,
       earnedBadgeIds: [],
     );
+    _isLoggedIn = true;
+    _onboardingComplete = true;
     notifyListeners();
+  }
+
+  void restoreSession(User supabaseUser) {
+    if (!_isLoggedIn) _loadUserFromSession(supabaseUser);
+  }
+
+  Future<String?> signInWithGoogle() async {
+    try {
+      await SupabaseService().signInWithGoogle();
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   Future<void> signOut() async {

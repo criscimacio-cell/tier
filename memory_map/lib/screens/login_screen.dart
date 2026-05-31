@@ -43,6 +43,19 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
   }
 
+  void _signInWithGoogle() async {
+    setState(() => _loading = true);
+    final error = await context.read<UserProvider>().signInWithGoogle();
+    if (!mounted) return;
+    setState(() => _loading = false);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error), backgroundColor: const Color(0xFFFF6B6B)),
+      );
+    }
+    // Navigation handled automatically by auth state listener in UserProvider
+  }
+
   void _signIn() async {
     if (!_signInFormKey.currentState!.validate()) return;
     setState(() => _loading = true);
@@ -263,7 +276,28 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 20),
+              // ── OR divider ─────────────────────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Text('or', style: TextStyle(color: Colors.grey.shade400, fontSize: 13)),
+                    ),
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              // ── Google button ──────────────────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: _GoogleButton(loading: _loading, onTap: _signInWithGoogle),
+              ),
+              const SizedBox(height: 24),
               Text(
                 'Your memories stay on your device.',
                 style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
@@ -444,6 +478,55 @@ class _Field extends StatelessWidget {
           borderSide: const BorderSide(color: Color(0xFFFF6B6B)),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      ),
+    );
+  }
+}
+
+class _GoogleButton extends StatelessWidget {
+  final bool loading;
+  final VoidCallback onTap;
+
+  const _GoogleButton({required this.loading, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: OutlinedButton(
+        onPressed: loading ? null : onTap,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.white,
+          side: BorderSide(color: Colors.grey.shade300),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 22, height: 22,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4285F4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Center(
+                child: Text('G', style: TextStyle(
+                  color: Colors.white, fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                )),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Continue with Google',
+              style: TextStyle(
+                fontSize: 15, fontWeight: FontWeight.w600,
+                color: Color(0xFF1A1A2E),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
