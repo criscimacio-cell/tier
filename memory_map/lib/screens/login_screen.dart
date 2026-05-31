@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen>
       );
       return;
     }
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const OnboardingScreen()));
+    // Navigation is handled by Consumer in main.dart once _isLoggedIn = true
   }
 
   void _signUp() async {
@@ -102,9 +102,7 @@ class _LoginScreenState extends State<LoginScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result), backgroundColor: const Color(0xFFFF6B6B)),
       );
-      return;
     }
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const OnboardingScreen()));
   }
 
   void _showConfirmationDialog(String email) {

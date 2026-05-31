@@ -108,6 +108,7 @@ class UserProvider extends ChangeNotifier {
         earnedBadgeIds: [],
       );
       _isLoggedIn = true;
+      _onboardingComplete = true;
       notifyListeners();
       return null;
     } catch (e) {

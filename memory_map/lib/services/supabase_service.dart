@@ -34,11 +34,12 @@ class SupabaseService {
   }
 
   Future<void> sendActivationEmail(String userId, String email, String name) async {
-    await _client.functions.invoke('send-activation', body: {
+    final res = await _client.functions.invoke('send-activation', body: {
       'userId': userId,
       'email': email,
       'name': name,
     });
+    if (res.status != 200) throw Exception('Failed to send activation email: ${res.data}');
   }
 
   // PROFILE

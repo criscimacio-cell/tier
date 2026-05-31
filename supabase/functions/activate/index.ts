@@ -31,10 +31,14 @@ serve(async (req) => {
     .eq('token', token)
 
   // Activate the profile
-  await supabase
+  const { error: activateError } = await supabase
     .from('profiles')
     .update({ is_activated: true })
     .eq('id', record.user_id)
+
+  if (activateError) {
+    return page('Something went wrong activating your account. Please try again or contact support.', false)
+  }
 
   return page('Your account has been activated! Open the app and sign in.', true)
 })
