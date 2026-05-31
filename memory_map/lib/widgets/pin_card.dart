@@ -81,7 +81,7 @@ class PinCard extends StatelessWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
-                              color: Color(0xFF1A1A2E),
+                              color: Color(0xFF1E293B),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -145,13 +145,13 @@ class PinCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A535C).withValues(alpha: 0.1),
+                      color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '${pin.visits.length}x',
                       style: const TextStyle(
-                        color: Color(0xFF1A535C),
+                        color: Color(0xFF6366F1),
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
                       ),

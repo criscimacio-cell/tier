@@ -57,7 +57,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
       builder: (ctx, child) => Theme(
         data: Theme.of(ctx).copyWith(
           colorScheme: const ColorScheme.light(
-            primary: Color(0xFF1A535C),
+            primary: Color(0xFF6366F1),
             onPrimary: Colors.white,
           ),
         ),
@@ -93,11 +93,11 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A535C).withValues(alpha: 0.1),
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.photo_library_outlined,
-                    color: Color(0xFF1A535C)),
+                child: const Icon(Icons.photo_library_rounded,
+                    color: Color(0xFF6366F1)),
               ),
               title: const Text('Choose from Gallery',
                   style: TextStyle(fontWeight: FontWeight.w600)),
@@ -115,11 +115,11 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFF6B6B).withValues(alpha: 0.1),
+                  color: const Color(0xFFF43F5E).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.camera_alt_outlined,
-                    color: Color(0xFFFF6B6B)),
+                child: const Icon(Icons.camera_alt_rounded,
+                    color: Color(0xFFF43F5E)),
               ),
               title: const Text('Take a Photo',
                   style: TextStyle(fontWeight: FontWeight.w600)),
@@ -200,7 +200,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFF7F3E9),
+        color: Color(0xFFF8FAFC),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -221,7 +221,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
             child: Row(
               children: [
-                const Icon(Icons.add_location_alt, color: Color(0xFF1A535C)),
+                const Icon(Icons.add_location_alt_rounded, color: Color(0xFF6366F1)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(
@@ -232,7 +232,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF1A535C),
+                          color: Color(0xFF6366F1),
                         ),
                       ),
                       Text(
@@ -246,7 +246,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(Icons.close_rounded),
                   onPressed: _isSaving ? null : () => Navigator.of(context).pop(),
                 ),
               ],
@@ -273,11 +273,11 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: const Color(0xFF1A535C).withValues(alpha: 0.1),
+                                color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Icon(Icons.calendar_today,
-                                  color: Color(0xFF1A535C), size: 20),
+                              child: const Icon(Icons.calendar_month_rounded,
+                                  color: Color(0xFF6366F1), size: 20),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -299,7 +299,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                                 ],
                               ),
                             ),
-                            Icon(Icons.chevron_right,
+                            Icon(Icons.chevron_right_rounded,
                                 color: Colors.grey.shade400),
                           ],
                         ),
@@ -311,7 +311,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A535C))),
+                              color: Color(0xFF6366F1))),
                       const SizedBox(height: 10),
                       Wrap(
                         spacing: 8,
@@ -335,7 +335,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A535C))),
+                              color: Color(0xFF6366F1))),
                       const SizedBox(height: 12),
                       Center(
                         child: InteractiveStarRating(
@@ -348,7 +348,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A535C))),
+                              color: Color(0xFF6366F1))),
                       const SizedBox(height: 10),
                       Row(
                         children: PriceRange.values.map((pr) {
@@ -363,12 +363,12 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                                     const EdgeInsets.symmetric(vertical: 10),
                                 decoration: BoxDecoration(
                                   color: sel
-                                      ? const Color(0xFF1A535C)
+                                      ? const Color(0xFF6366F1)
                                       : Colors.white,
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: sel
-                                        ? const Color(0xFF1A535C)
+                                        ? const Color(0xFF6366F1)
                                         : Colors.grey.shade200,
                                   ),
                                 ),
@@ -401,7 +401,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1A535C))),
+                                  color: Color(0xFF6366F1))),
                           const Spacer(),
                           Text('optional',
                               style: TextStyle(
@@ -435,7 +435,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(Icons.add_photo_alternate,
+                                        Icon(Icons.add_photo_alternate_rounded,
                                             color: Colors.grey.shade400,
                                             size: 28),
                                         const SizedBox(height: 4),
@@ -472,7 +472,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                                           color: Colors.black54,
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(Icons.close,
+                                        child: const Icon(Icons.close_rounded,
                                             color: Colors.white, size: 14),
                                       ),
                                     ),
@@ -499,8 +499,8 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.add_photo_alternate_outlined,
-                                    color: const Color(0xFF1A535C).withValues(alpha: 0.5),
+                                Icon(Icons.add_photo_alternate_rounded,
+                                    color: const Color(0xFF6366F1).withValues(alpha: 0.5),
                                     size: 28),
                                 const SizedBox(height: 6),
                                 Text(
@@ -528,7 +528,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1A535C))),
+                                  color: Color(0xFF6366F1))),
                           const Spacer(),
                           Text('optional',
                               style: TextStyle(
@@ -551,20 +551,20 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1A535C))),
+                                  color: Color(0xFF6366F1))),
                           const SizedBox(width: 6),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF9B59B6)
+                              color: const Color(0xFFA855F7)
                                   .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Text('Private',
                                 style: TextStyle(
                                     fontSize: 10,
-                                    color: Color(0xFF9B59B6),
+                                    color: Color(0xFFA855F7),
                                     fontWeight: FontWeight.w600)),
                           ),
                         ],
@@ -589,7 +589,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1A535C))),
+                                  color: Color(0xFF6366F1))),
                           const Spacer(),
                           Text('optional',
                               style: TextStyle(
@@ -607,11 +607,11 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                               label: Text(item),
                               onDeleted: () =>
                                   setState(() => _bestItems.remove(item)),
-                              backgroundColor: const Color(0xFF1A535C)
+                              backgroundColor: const Color(0xFF6366F1)
                                   .withValues(alpha: 0.1),
-                              deleteIconColor: const Color(0xFF1A535C),
+                              deleteIconColor: const Color(0xFF6366F1),
                               labelStyle: const TextStyle(
-                                color: Color(0xFF1A535C),
+                                color: Color(0xFF6366F1),
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13,
                               ),
@@ -633,7 +633,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                           ElevatedButton(
                             onPressed: _addBestItem,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1A535C),
+                              backgroundColor: const Color(0xFF6366F1),
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 14, vertical: 14),
                               shape: RoundedRectangleBorder(
@@ -641,7 +641,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child: const Icon(Icons.add,
+                            child: const Icon(Icons.add_rounded,
                                 color: Colors.white, size: 20),
                           ),
                         ],
@@ -656,7 +656,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                     child: ElevatedButton(
                       onPressed: _isSaving ? null : _save,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1A535C),
+                        backgroundColor: const Color(0xFF6366F1),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -715,7 +715,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF1A535C)),
+        borderSide: const BorderSide(color: Color(0xFF6366F1)),
       ),
     );
   }

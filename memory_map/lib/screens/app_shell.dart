@@ -67,7 +67,7 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     if (!_initialized) {
       return const Scaffold(
-        backgroundColor: Color(0xFF0A1628),
+        backgroundColor: Color(0xFF0F172A),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -87,14 +87,14 @@ class _AppShellState extends State<AppShell> {
               Text(
                 'every place, a story.',
                 style: TextStyle(
-                  color: Color(0xFF8899BB),
+                  color: Color(0xFF94A3B8),
                   fontSize: 15,
                   fontStyle: FontStyle.italic,
                 ),
               ),
               SizedBox(height: 48),
               CircularProgressIndicator(
-                color: Color(0xFFFF6B6B),
+                color: Color(0xFFF43F5E),
                 strokeWidth: 2,
               ),
             ],
@@ -138,28 +138,28 @@ class _AppShellState extends State<AppShell> {
                       children: [
                         _NavItem(
                           icon: Icons.map_outlined,
-                          activeIcon: Icons.map,
+                          activeIcon: Icons.map_rounded,
                           label: 'Map',
                           isActive: _currentIndex == 0,
                           onTap: () => setState(() => _currentIndex = 0),
                         ),
                         _NavItem(
                           icon: Icons.explore_outlined,
-                          activeIcon: Icons.explore,
+                          activeIcon: Icons.explore_rounded,
                           label: 'Discover',
                           isActive: _currentIndex == 1,
                           onTap: () => setState(() => _currentIndex = 1),
                         ),
                         _NavItem(
-                          icon: Icons.people_outline,
-                          activeIcon: Icons.people,
+                          icon: Icons.group_outlined,
+                          activeIcon: Icons.group_rounded,
                           label: 'Friends',
                           isActive: _currentIndex == 2,
                           onTap: () => setState(() => _currentIndex = 2),
                         ),
                         _NavItem(
-                          icon: Icons.person_outline,
-                          activeIcon: Icons.person,
+                          icon: Icons.account_circle_outlined,
+                          activeIcon: Icons.account_circle,
                           label: 'Profile',
                           isActive: _currentIndex == 3,
                           onTap: () => setState(() => _currentIndex = 3),
@@ -194,7 +194,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const activeColor = Color(0xFF1A535C);
+    const activeColor = Color(0xFF6366F1);
     final inactiveColor = Colors.grey.shade400;
 
     return Expanded(

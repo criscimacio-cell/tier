@@ -48,18 +48,18 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 Container(
                   width: 2,
                   height: 20,
-                  color: const Color(0xFFFF6B6B),
+                  color: const Color(0xFFF43F5E),
                 ),
                 Container(
                   width: 14,
                   height: 14,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFF6B6B),
+                    color: const Color(0xFFF43F5E),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2.5),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFFF6B6B).withValues(alpha: 0.5),
+                        color: const Color(0xFFF43F5E).withValues(alpha: 0.5),
                         blurRadius: 8,
                       ),
                     ],
@@ -69,7 +69,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 Container(
                   width: 2,
                   height: 16,
-                  color: const Color(0xFFFF6B6B),
+                  color: const Color(0xFFF43F5E),
                 ),
                 Container(
                   width: 6,
@@ -109,7 +109,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                       IconButton(
                         icon: const Icon(Icons.arrow_back_ios_new, size: 18),
                         onPressed: () => Navigator.pop(context),
-                        color: const Color(0xFF1A535C),
+                        color: const Color(0xFF6366F1),
                       ),
                       const Expanded(
                         child: Text(
@@ -117,12 +117,12 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            color: Color(0xFF1A1A2E),
+                            color: Color(0xFF1E293B),
                           ),
                         ),
                       ),
                       const Icon(Icons.touch_app_outlined,
-                          color: Color(0xFF1A535C), size: 20),
+                          color: Color(0xFF6366F1), size: 20),
                       const SizedBox(width: 8),
                     ],
                   ),
@@ -181,14 +181,14 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF7F3E9),
+                        color: const Color(0xFFF8FAFC),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.location_on,
-                              color: Color(0xFFFF6B6B), size: 16),
+                              color: Color(0xFFF43F5E), size: 16),
                           const SizedBox(width: 6),
                           Text(
                             '${_center.latitude.toStringAsFixed(4)}°N, '
@@ -218,7 +218,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF6B6B),
+                          backgroundColor: const Color(0xFFF43F5E),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
@@ -261,7 +261,7 @@ class _ZoomButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, size: 20, color: const Color(0xFF1A535C)),
+        child: Icon(icon, size: 20, color: const Color(0xFF6366F1)),
       ),
     );
   }

@@ -93,7 +93,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFF7F3E9),
+        color: Color(0xFFF8FAFC),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -113,19 +113,19 @@ class _AddPinScreenState extends State<AddPinScreen> {
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
             child: Row(
               children: [
-                const Icon(Icons.add_location, color: Color(0xFFFF6B6B)),
+                const Icon(Icons.add_location_alt_rounded, color: Color(0xFFF43F5E)),
                 const SizedBox(width: 8),
                 const Text(
                   'Add New Place',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF1A535C),
+                    color: Color(0xFF6366F1),
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(Icons.close_rounded),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
@@ -142,16 +142,16 @@ class _AddPinScreenState extends State<AddPinScreen> {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A535C).withValues(alpha: 0.08),
+                      color: const Color(0xFF6366F1).withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: const Color(0xFF1A535C).withValues(alpha: 0.2),
+                        color: const Color(0xFF6366F1).withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.location_on,
-                            color: Color(0xFFFF6B6B), size: 20),
+                        const Icon(Icons.location_on_rounded,
+                            color: Color(0xFFF43F5E), size: 20),
                         const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +161,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
-                                color: Color(0xFF1A535C),
+                                color: Color(0xFF6366F1),
                               ),
                             ),
                             Text(
@@ -262,8 +262,8 @@ class _AddPinScreenState extends State<AddPinScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.lock_outline,
-                            color: Color(0xFF9B59B6), size: 20),
+                        const Icon(Icons.lock_rounded,
+                            color: Color(0xFFA855F7), size: 20),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Column(
@@ -289,7 +289,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
                         Switch(
                           value: _isPrivate,
                           onChanged: (v) => setState(() => _isPrivate = v),
-                          activeColor: const Color(0xFF1A535C),
+                          activeColor: const Color(0xFF6366F1),
                         ),
                       ],
                     ),
@@ -310,7 +310,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
                                 color: Colors.white,
                               ),
                             )
-                          : const Icon(Icons.navigate_next,
+                          : const Icon(Icons.arrow_forward_rounded,
                               color: Colors.white),
                       label: const Text(
                         'Next: Log Visit',
@@ -320,7 +320,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF6B6B),
+                        backgroundColor: const Color(0xFFF43F5E),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -355,7 +355,7 @@ class _AddPinScreenState extends State<AddPinScreen> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF1A535C)),
+        borderSide: const BorderSide(color: Color(0xFF6366F1)),
       ),
     );
   }
@@ -372,7 +372,7 @@ class _SectionLabel extends StatelessWidget {
       style: const TextStyle(
         fontWeight: FontWeight.w700,
         fontSize: 14,
-        color: Color(0xFF1A535C),
+        color: Color(0xFF6366F1),
         letterSpacing: 0.3,
       ),
     );

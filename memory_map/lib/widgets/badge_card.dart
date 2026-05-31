@@ -15,7 +15,7 @@ class BadgeCard extends StatelessWidget {
         boxShadow: badge.earned
             ? [
                 BoxShadow(
-                  color: const Color(0xFF1A535C).withValues(alpha: 0.1),
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -23,7 +23,7 @@ class BadgeCard extends StatelessWidget {
             : [],
         border: Border.all(
           color: badge.earned
-              ? const Color(0xFF1A535C).withValues(alpha: 0.2)
+              ? const Color(0xFF6366F1).withValues(alpha: 0.2)
               : Colors.grey.shade200,
         ),
       ),
@@ -40,11 +40,11 @@ class BadgeCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: badge.earned
-                      ? const Color(0xFFF7F3E9)
+                      ? const Color(0xFFF8FAFC)
                       : Colors.grey.shade200,
                   border: Border.all(
                     color: badge.earned
-                        ? const Color(0xFFF39C12).withValues(alpha: 0.4)
+                        ? const Color(0xFFF59E0B).withValues(alpha: 0.4)
                         : Colors.grey.shade300,
                     width: 2,
                   ),
@@ -86,7 +86,7 @@ class BadgeCard extends StatelessWidget {
                     height: 18,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFF27AE60),
+                      color: Color(0xFF10B981),
                     ),
                     child: const Icon(
                       Icons.check,
@@ -103,7 +103,7 @@ class BadgeCard extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 12,
-              color: badge.earned ? const Color(0xFF1A1A2E) : Colors.grey,
+              color: badge.earned ? const Color(0xFF1E293B) : Colors.grey,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,

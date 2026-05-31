@@ -109,10 +109,10 @@ class _TimeSliderWidgetState extends State<TimeSliderWidget> {
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFFFF6B6B),
+              activeTrackColor: const Color(0xFFF43F5E),
               inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
               thumbColor: Colors.white,
-              overlayColor: const Color(0xFFFF6B6B).withValues(alpha: 0.3),
+              overlayColor: const Color(0xFFF43F5E).withValues(alpha: 0.3),
               rangeThumbShape: const RoundRangeSliderThumbShape(
                 enabledThumbRadius: 8,
               ),

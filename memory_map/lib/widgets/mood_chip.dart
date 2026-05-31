@@ -18,13 +18,13 @@ class MoodChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bg = selected
-        ? const Color(0xFF1A535C).withValues(alpha: 0.15)
+        ? const Color(0xFF6366F1).withValues(alpha: 0.15)
         : Colors.white;
     final border = selected
-        ? const Color(0xFF1A535C)
+        ? const Color(0xFF6366F1)
         : Colors.grey.shade300;
     final textColor = selected
-        ? const Color(0xFF1A535C)
+        ? const Color(0xFF6366F1)
         : Colors.grey.shade700;
 
     return GestureDetector(
@@ -42,7 +42,7 @@ class MoodChip extends StatelessWidget {
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: const Color(0xFF1A535C).withValues(alpha: 0.12),
+                    color: const Color(0xFF6366F1).withValues(alpha: 0.12),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   )

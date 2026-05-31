@@ -56,9 +56,9 @@ class MemoryMapApp extends StatelessWidget {
   }
 
   ThemeData _buildTheme() {
-    const primary = Color(0xFF1A535C);
-    const accent = Color(0xFFFF6B6B);
-    const background = Color(0xFFF7F3E9);
+    const primary = Color(0xFF6366F1);
+    const accent = Color(0xFFF43F5E);
+    const background = Color(0xFFF8FAFC);
 
     return ThemeData(
       useMaterial3: true,
@@ -95,7 +95,7 @@ class MemoryMapApp extends StatelessWidget {
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
         selectedItemColor: primary,
-        unselectedItemColor: Color(0xFFAAAAAA),
+        unselectedItemColor: Color(0xFFCBD5E1),
         selectedLabelStyle: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 11,

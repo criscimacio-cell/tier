@@ -56,7 +56,7 @@ class PinDetailSheet extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFF7F3E9),
+        color: Color(0xFFF8FAFC),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -239,7 +239,7 @@ class PinDetailSheet extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w800,
-                                  color: Color(0xFF1A1A2E),
+                                  color: Color(0xFF1E293B),
                                 ),
                               ),
                             ),
@@ -250,20 +250,20 @@ class PinDetailSheet extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF9B59B6)
+                                  color: const Color(0xFFA855F7)
                                       .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Row(
                                   children: [
-                                    Icon(Icons.lock,
+                                    Icon(Icons.lock_rounded,
                                         size: 12,
-                                        color: Color(0xFF9B59B6)),
+                                        color: Color(0xFFA855F7)),
                                     SizedBox(width: 4),
                                     Text(
                                       'Private',
                                       style: TextStyle(
-                                        color: Color(0xFF9B59B6),
+                                        color: Color(0xFFA855F7),
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -357,7 +357,7 @@ class PinDetailSheet extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1A535C).withValues(alpha: 0.07),
+                            color: const Color(0xFF6366F1).withValues(alpha: 0.07),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Row(
@@ -367,7 +367,7 @@ class PinDetailSheet extends StatelessWidget {
                               _StatItem(
                                 value: '${pin.visits.length}',
                                 label: 'visits',
-                                icon: Icons.place,
+                                icon: Icons.place_rounded,
                               ),
                               Container(
                                   width: 1,
@@ -378,7 +378,7 @@ class PinDetailSheet extends StatelessWidget {
                                     ? _relativeTime(pin.lastVisit!.date)
                                     : 'Never',
                                 label: 'last visit',
-                                icon: Icons.access_time,
+                                icon: Icons.schedule_rounded,
                               ),
                               if (pin.lastVisit != null) ...[
                                 Container(
@@ -404,7 +404,7 @@ class PinDetailSheet extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
-                              color: Color(0xFF1A1A2E),
+                              color: Color(0xFF1E293B),
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -419,10 +419,10 @@ class PinDetailSheet extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 14, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF7F3E9),
+                                  color: const Color(0xFFF8FAFC),
                                   borderRadius: BorderRadius.circular(18),
                                   border: Border.all(
-                                    color: const Color(0xFFD2691E)
+                                    color: const Color(0xFFF97316)
                                         .withValues(alpha: 0.3),
                                   ),
                                 ),
@@ -431,7 +431,7 @@ class PinDetailSheet extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
-                                    color: Color(0xFFD2691E),
+                                    color: Color(0xFFF97316),
                                   ),
                                 ),
                               ),
@@ -448,7 +448,7 @@ class PinDetailSheet extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 15,
-                                color: Color(0xFF1A1A2E),
+                                color: Color(0xFF1E293B),
                               ),
                             ),
                             const Spacer(),
@@ -512,17 +512,17 @@ class PinDetailSheet extends StatelessWidget {
                       onPressed: () => pinsP.togglePrivacy(pin.id),
                       icon: Icon(
                         currentPin.isPrivate
-                            ? Icons.lock
-                            : Icons.lock_open,
+                            ? Icons.lock_rounded
+                            : Icons.lock_open_rounded,
                         size: 16,
-                        color: const Color(0xFF9B59B6),
+                        color: const Color(0xFFA855F7),
                       ),
                       label: Text(
                         currentPin.isPrivate ? 'Private' : 'Public',
-                        style: const TextStyle(color: Color(0xFF9B59B6)),
+                        style: const TextStyle(color: Color(0xFFA855F7)),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF9B59B6)),
+                        side: const BorderSide(color: Color(0xFFA855F7)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -552,14 +552,14 @@ class PinDetailSheet extends StatelessWidget {
                         Navigator.of(context).pop();
                       }
                     },
-                    icon: const Icon(Icons.add, color: Colors.white),
+                    icon: const Icon(Icons.add_rounded, color: Colors.white),
                     label: const Text(
                       'Log New Visit',
                       style: TextStyle(
                           fontSize: 15, fontWeight: FontWeight.w700),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF6B6B),
+                      backgroundColor: const Color(0xFFF43F5E),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -603,7 +603,7 @@ class _StatItem extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 15,
-              color: Color(0xFF1A535C),
+              color: Color(0xFF6366F1),
             ),
           ),
         const SizedBox(height: 3),
@@ -650,7 +650,7 @@ class _VisitCard extends StatelessWidget {
                 style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
-                  color: Color(0xFF1A535C),
+                  color: Color(0xFF6366F1),
                 ),
               ),
               const SizedBox(width: 8),
@@ -663,7 +663,7 @@ class _VisitCard extends StatelessWidget {
               visit.review,
               style: const TextStyle(
                 fontSize: 13,
-                color: Color(0xFF1A1A2E),
+                color: Color(0xFF1E293B),
               ),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,

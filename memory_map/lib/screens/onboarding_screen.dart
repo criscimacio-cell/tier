@@ -16,19 +16,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static const _pages = [
     _OnboardingPage(
-      backgroundColor: Color(0xFF1A535C),
+      backgroundColor: Color(0xFF6366F1),
       emoji: '🌍',
       title: 'Your world, mapped.',
       body: 'Every café, restaurant, hidden gem — pinned exactly where it happened.',
     ),
     _OnboardingPage(
-      backgroundColor: Color(0xFF2C3E50),
+      backgroundColor: Color(0xFF0F172A),
       emoji: '📸',
       title: 'Memories, not just places.',
       body: 'Log photos, moods, and journal entries. Build a living scrapbook of your life.',
     ),
     _OnboardingPage(
-      backgroundColor: Color(0xFFE74C3C),
+      backgroundColor: Color(0xFFEF4444),
       emoji: '👥',
       title: 'Explore with friends.',
       body: 'See where your crew has been. Find hidden gems through the people you trust.',

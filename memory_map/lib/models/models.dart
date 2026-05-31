@@ -30,13 +30,13 @@ extension CategoryExtension on Category {
   }
   Color get color {
     switch (this) {
-      case Category.cafe: return const Color(0xFFD2691E);
-      case Category.restaurant: return const Color(0xFFE74C3C);
-      case Category.hiddenGem: return const Color(0xFF9B59B6);
-      case Category.park: return const Color(0xFF27AE60);
-      case Category.bar: return const Color(0xFFF39C12);
-      case Category.shop: return const Color(0xFF2980B9);
-      case Category.other: return const Color(0xFF7F8C8D);
+      case Category.cafe: return const Color(0xFFF97316);
+      case Category.restaurant: return const Color(0xFFEF4444);
+      case Category.hiddenGem: return const Color(0xFFA855F7);
+      case Category.park: return const Color(0xFF10B981);
+      case Category.bar: return const Color(0xFFF59E0B);
+      case Category.shop: return const Color(0xFF3B82F6);
+      case Category.other: return const Color(0xFF94A3B8);
     }
   }
 }

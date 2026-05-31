@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen>
     setState(() => _loading = false);
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error), backgroundColor: const Color(0xFFFF6B6B)),
+        SnackBar(content: Text(error), backgroundColor: const Color(0xFFF43F5E)),
       );
     }
     // Navigation handled automatically by auth state listener in UserProvider
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Account not activated. Check your email for the activation link.'),
-          backgroundColor: Color(0xFFFF6B6B),
+          backgroundColor: Color(0xFFF43F5E),
           duration: Duration(seconds: 5),
         ),
       );
@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error), backgroundColor: const Color(0xFFFF6B6B)),
+        SnackBar(content: Text(error), backgroundColor: const Color(0xFFF43F5E)),
       );
       return;
     }
@@ -120,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
     if (result != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result), backgroundColor: const Color(0xFFFF6B6B)),
+        SnackBar(content: Text(result), backgroundColor: const Color(0xFFF43F5E)),
       );
     }
   }
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen>
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: const Color(0xFF1A535C).withValues(alpha: 0.1),
+                color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Center(child: Text('\u{1F4E7}', style: TextStyle(fontSize: 32))),
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen>
             const SizedBox(height: 16),
             const Text(
               'Check your email',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF1A1A2E)),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen>
                 _tabController.animateTo(0); // switch to Sign In tab
               },
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFF1A535C),
+                backgroundColor: const Color(0xFF6366F1),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A1628),
+      backgroundColor: const Color(0xFF0F172A),
       body: Stack(
         children: [
           // Background gradient
@@ -193,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen>
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color(0xFF0A1628), Color(0xFF1A535C)],
+                  colors: [Color(0xFF0F172A), Color(0xFF6366F1)],
                 ),
               ),
             ),
@@ -249,11 +249,11 @@ class _LoginScreenState extends State<LoginScreen>
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1A535C),
+                            color: const Color(0xFF6366F1),
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF1A535C).withValues(alpha: 0.4),
+                                color: const Color(0xFF6366F1).withValues(alpha: 0.4),
                                 blurRadius: 24,
                                 offset: const Offset(0, 8),
                               ),
@@ -290,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen>
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A2744),
+                      color: const Color(0xFF1E1B4B),
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
@@ -307,7 +307,7 @@ class _LoginScreenState extends State<LoginScreen>
                           margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                           height: 44,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0A1628),
+                            color: const Color(0xFF0F172A),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: TabBar(
@@ -317,7 +317,7 @@ class _LoginScreenState extends State<LoginScreen>
                               borderRadius: BorderRadius.circular(10),
                             ),
                             indicatorSize: TabBarIndicatorSize.tab,
-                            labelColor: const Color(0xFF1A535C),
+                            labelColor: const Color(0xFF6366F1),
                             unselectedLabelColor: Colors.white54,
                             labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                             dividerColor: Colors.transparent,
@@ -550,15 +550,15 @@ class _Field extends StatelessWidget {
         prefixIcon: Icon(icon, size: 20, color: Colors.white54),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: const Color(0xFF1A2744),
+        fillColor: const Color(0xFF1E1B4B),
         labelStyle: const TextStyle(color: Colors.white54, fontSize: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF2A3F5F)),
+          borderSide: const BorderSide(color: Color(0xFF3730A3)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF2A3F5F)),
+          borderSide: const BorderSide(color: Color(0xFF3730A3)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -566,11 +566,11 @@ class _Field extends StatelessWidget {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFFF6B6B)),
+          borderSide: const BorderSide(color: Color(0xFFF43F5E)),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFFF6B6B), width: 1.5),
+          borderSide: const BorderSide(color: Color(0xFFF43F5E), width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
@@ -592,7 +592,7 @@ class _GoogleButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: loading ? null : onTap,
         style: OutlinedButton.styleFrom(
-          backgroundColor: const Color(0xFF1A2744),
+          backgroundColor: const Color(0xFF1E1B4B),
           side: const BorderSide(color: Colors.white),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
@@ -642,7 +642,7 @@ class _SubmitButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: loading ? null : onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1A535C),
+          backgroundColor: const Color(0xFF6366F1),
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),

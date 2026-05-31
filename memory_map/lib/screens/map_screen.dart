@@ -184,7 +184,7 @@ class _MapScreenState extends State<MapScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 28, vertical: 22),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0A1628).withValues(alpha: 0.82),
+                      color: const Color(0xFF0F172A).withValues(alpha: 0.82),
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Column(
@@ -230,7 +230,7 @@ class _MapScreenState extends State<MapScreen> {
                         width: 280,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0A1628).withValues(alpha: 0.85),
+                          color: const Color(0xFF0F172A).withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
                             color: Colors.white.withValues(alpha: 0.08),
@@ -272,7 +272,7 @@ class _MapScreenState extends State<MapScreen> {
                                 });
                               },
                               icon: Icon(
-                                _showSearch ? Icons.close : Icons.search,
+                                _showSearch ? Icons.close_rounded : Icons.search_rounded,
                                 color: Colors.white.withValues(alpha: 0.8),
                                 size: 20,
                               ),
@@ -284,7 +284,7 @@ class _MapScreenState extends State<MapScreen> {
                                   minWidth: 36, minHeight: 36),
                               onPressed: () {},
                               icon: Icon(
-                                Icons.notifications_outlined,
+                                Icons.notifications_none_rounded,
                                 color: Colors.white.withValues(alpha: 0.8),
                                 size: 20,
                               ),
@@ -360,7 +360,7 @@ class _MapScreenState extends State<MapScreen> {
                                     final result = _searchResults[i];
                                     return ListTile(
                                       dense: true,
-                                      leading: const Icon(Icons.place_outlined, color: Color(0xFF1A535C), size: 20),
+                                      leading: const Icon(Icons.place_rounded, color: Color(0xFF6366F1), size: 20),
                                       title: Text(
                                         result['display_name'] ?? '',
                                         maxLines: 2,
@@ -402,7 +402,7 @@ class _MapScreenState extends State<MapScreen> {
                           decoration: BoxDecoration(
                             color: pinsP.showFriendPins
                                 ? Colors.white
-                                : const Color(0xFF0A1628).withValues(alpha: 0.75),
+                                : const Color(0xFF0F172A).withValues(alpha: 0.75),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -416,10 +416,10 @@ class _MapScreenState extends State<MapScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.people,
+                                Icons.group_rounded,
                                 size: 16,
                                 color: pinsP.showFriendPins
-                                    ? const Color(0xFF1A535C)
+                                    ? const Color(0xFF6366F1)
                                     : Colors.white,
                               ),
                               const SizedBox(width: 4),
@@ -429,7 +429,7 @@ class _MapScreenState extends State<MapScreen> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: pinsP.showFriendPins
-                                      ? const Color(0xFF1A535C)
+                                      ? const Color(0xFF6366F1)
                                       : Colors.white,
                                 ),
                               ),
@@ -493,12 +493,12 @@ class _MapScreenState extends State<MapScreen> {
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: _showTimeSlider
-                                    ? const Color(0xFFFF6B6B)
+                                    ? const Color(0xFFF43F5E)
                                     : Colors.white.withValues(alpha: 0.85),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Icon(
-                                Icons.access_time,
+                                Icons.schedule_rounded,
                                 size: 18,
                                 color: _showTimeSlider
                                     ? Colors.white
@@ -526,16 +526,16 @@ class _MapScreenState extends State<MapScreen> {
                   heroTag: 'location',
                   onPressed: _goToMyLocation,
                   backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF1A535C),
+                  foregroundColor: const Color(0xFF6366F1),
                   elevation: 3,
-                  child: const Icon(Icons.my_location, size: 20),
+                  child: const Icon(Icons.my_location_rounded, size: 20),
                 ),
                 const SizedBox(height: 12),
                 // Add pin button
                 FloatingActionButton(
                   heroTag: 'addPin',
                   onPressed: _openLocationPicker,
-                  backgroundColor: const Color(0xFFFF6B6B),
+                  backgroundColor: const Color(0xFFF43F5E),
                   foregroundColor: Colors.white,
                   elevation: 4,
                   child: const Icon(Icons.add_location_alt, size: 26),
@@ -631,7 +631,7 @@ class _PinMarkerState extends State<_PinMarker>
                       style: TextStyle(
                         fontSize: textFontSize,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1A2E),
+                        color: const Color(0xFF1E293B),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

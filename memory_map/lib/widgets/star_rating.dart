@@ -14,7 +14,7 @@ class StarRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = activeColor ?? const Color(0xFFF39C12);
+    final color = activeColor ?? const Color(0xFFF59E0B);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(5, (i) {
@@ -72,7 +72,7 @@ class _InteractiveStarRatingState extends State<InteractiveStarRating> {
           child: Icon(
             _rating >= starValue ? Icons.star_rounded : Icons.star_border_rounded,
             size: widget.size,
-            color: const Color(0xFFF39C12),
+            color: const Color(0xFFF59E0B),
           ),
         );
       }),

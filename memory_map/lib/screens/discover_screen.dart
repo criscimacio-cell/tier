@@ -60,7 +60,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         final filteredPins = _applyFilters(pinsP.pins);
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF7F3E9),
+          backgroundColor: const Color(0xFFF8FAFC),
           body: CustomScrollView(
             slivers: [
               // ── Frosted pill header ──────────────────────────────────────
@@ -88,7 +88,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
-                          color: Color(0xFF1A535C),
+                          color: Color(0xFF6366F1),
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -141,7 +141,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
-                          color: Color(0xFF1A535C),
+                          color: Color(0xFF6366F1),
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -163,12 +163,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                     horizontal: 18, vertical: 6),
                                 decoration: BoxDecoration(
                                   color: sel
-                                      ? const Color(0xFF0A1628)
+                                      ? const Color(0xFF0F172A)
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
                                     color: sel
-                                        ? const Color(0xFF0A1628)
+                                        ? const Color(0xFF0F172A)
                                         : Colors.grey.shade400,
                                     width: sel ? 0 : 1.5,
                                   ),
@@ -207,7 +207,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 17,
-                            color: Color(0xFF1A1A2E),
+                            color: Color(0xFF1E293B),
                           ),
                         ),
                         const SizedBox(width: 6),
@@ -215,14 +215,14 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFF6B6B)
+                            color: const Color(0xFFF43F5E)
                                 .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
                             '${nudges.length}',
                             style: const TextStyle(
-                              color: Color(0xFFFF6B6B),
+                              color: Color(0xFFF43F5E),
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
                             ),
@@ -268,7 +268,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                               borderRadius: BorderRadius.circular(16),
                               border: const Border(
                                 left: BorderSide(
-                                  color: Color(0xFFFF6B6B),
+                                  color: Color(0xFFF43F5E),
                                   width: 4,
                                 ),
                               ),
@@ -304,7 +304,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                 Text(
                                   '$daysSince days ago',
                                   style: const TextStyle(
-                                    color: Color(0xFFFF6B6B),
+                                    color: Color(0xFFF43F5E),
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -329,7 +329,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 17,
-                        color: Color(0xFF1A1A2E),
+                        color: Color(0xFF1E293B),
                       ),
                     ),
                   ),
@@ -429,7 +429,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 17,
-                            color: Color(0xFF1A1A2E),
+                            color: Color(0xFF1E293B),
                           ),
                         ),
                         const Spacer(),
@@ -497,7 +497,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF1A1A2E),
+                            color: Color(0xFF1E293B),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -528,7 +528,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 17,
-                        color: Color(0xFF1A1A2E),
+                        color: Color(0xFF1E293B),
                       ),
                     ),
                   ),
@@ -586,7 +586,7 @@ class _DiscoverHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF0A1628),
+      color: const Color(0xFF0F172A),
       child: SafeArea(
         bottom: false,
         child: Column(
@@ -688,7 +688,7 @@ class _UntriedPinCard extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: const Border(
-            left: BorderSide(color: Color(0xFFFF6B6B), width: 4),
+            left: BorderSide(color: Color(0xFFF43F5E), width: 4),
           ),
           boxShadow: [
             BoxShadow(

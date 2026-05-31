@@ -37,9 +37,9 @@ class _FriendsScreenState extends State<FriendsScreen>
         final myPins = pinsP.pins;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF7F3E9),
+          backgroundColor: const Color(0xFFF8FAFC),
           appBar: AppBar(
-            backgroundColor: const Color(0xFF1A535C),
+            backgroundColor: const Color(0xFF6366F1),
             title: const Text(
               'Friends',
               style: TextStyle(
@@ -49,14 +49,14 @@ class _FriendsScreenState extends State<FriendsScreen>
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.person_add_outlined,
+                icon: const Icon(Icons.person_add_alt_1_rounded,
                     color: Colors.white),
                 onPressed: () => _showAddFriendDialog(context),
               ),
             ],
             bottom: TabBar(
               controller: _tabController,
-              indicatorColor: const Color(0xFFFF6B6B),
+              indicatorColor: const Color(0xFFF43F5E),
               labelColor: Colors.white,
               unselectedLabelColor: Colors.white60,
               labelStyle: const TextStyle(fontWeight: FontWeight.w600),
@@ -101,7 +101,7 @@ class _FriendsScreenState extends State<FriendsScreen>
         content: TextField(
           decoration: InputDecoration(
             hintText: 'Search by username...',
-            prefixIcon: const Icon(Icons.search),
+            prefixIcon: const Icon(Icons.search_rounded),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -118,12 +118,12 @@ class _FriendsScreenState extends State<FriendsScreen>
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Friend request sent!'),
-                  backgroundColor: Color(0xFF1A535C),
+                  backgroundColor: Color(0xFF6366F1),
                 ),
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A535C),
+              backgroundColor: const Color(0xFF6366F1),
             ),
             child: const Text('Send Request',
                 style: TextStyle(color: Colors.white)),
@@ -153,7 +153,7 @@ class _FriendsScreenState extends State<FriendsScreen>
         maxChildSize: 0.9,
         builder: (ctx, sc) => Container(
           decoration: const BoxDecoration(
-            color: Color(0xFFF7F3E9),
+            color: Color(0xFFF8FAFC),
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
@@ -182,7 +182,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF1A535C),
+                            color: Color(0xFF6366F1),
                           ),
                         ),
                       ],
@@ -194,13 +194,13 @@ class _FriendsScreenState extends State<FriendsScreen>
                         _CompareBox(
                           value: '${pinsP.pins.length}',
                           label: 'Your pins',
-                          color: const Color(0xFF1A535C),
+                          color: const Color(0xFF6366F1),
                         ),
                         _CompareBox(
                           value:
                               '${comparison['overlapCount'] ?? 0}',
                           label: 'In common',
-                          color: const Color(0xFFFF6B6B),
+                          color: const Color(0xFFF43F5E),
                         ),
                         _CompareBox(
                           value:
@@ -216,7 +216,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
-                        color: Color(0xFF1A535C),
+                        color: Color(0xFF6366F1),
                       ),
                     ),
                   ],
@@ -323,7 +323,7 @@ class _FriendsListTab extends StatelessWidget {
         maxChildSize: 0.95,
         builder: (ctx, sc) => Container(
           decoration: const BoxDecoration(
-            color: Color(0xFFF7F3E9),
+            color: Color(0xFFF8FAFC),
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
@@ -515,7 +515,7 @@ class _FriendCard extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: Color(0xFF1A1A2E),
+                          color: Color(0xFF1E293B),
                         ),
                       ),
                       Text(
@@ -692,7 +692,7 @@ class _ActivityTab extends StatelessWidget {
                     RichText(
                       text: TextSpan(
                         style: const TextStyle(
-                          color: Color(0xFF1A1A2E),
+                          color: Color(0xFF1E293B),
                           fontSize: 13,
                         ),
                         children: [
@@ -777,28 +777,28 @@ class _GroupsTab extends StatelessWidget {
         'emoji': '👨‍👩‍👧‍👦',
         'members': 4,
         'places': 12,
-        'color': const Color(0xFFE74C3C),
+        'color': const Color(0xFFEF4444),
       },
       {
         'name': 'College Barkada',
         'emoji': '🎓',
         'members': 6,
         'places': 28,
-        'color': const Color(0xFF9B59B6),
+        'color': const Color(0xFFA855F7),
       },
       {
         'name': 'Work Lunches',
         'emoji': '💼',
         'members': 8,
         'places': 15,
-        'color': const Color(0xFF2980B9),
+        'color': const Color(0xFF3B82F6),
       },
       {
         'name': 'Weekend Warriors',
         'emoji': '🏃',
         'members': 3,
         'places': 9,
-        'color': const Color(0xFF27AE60),
+        'color': const Color(0xFF10B981),
       },
     ];
 
@@ -814,10 +814,10 @@ class _GroupsTab extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A535C).withValues(alpha: 0.07),
+              color: const Color(0xFF6366F1).withValues(alpha: 0.07),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: const Color(0xFF1A535C).withValues(alpha: 0.3),
+                color: const Color(0xFF6366F1).withValues(alpha: 0.3),
                 style: BorderStyle.solid,
               ),
             ),
@@ -825,12 +825,12 @@ class _GroupsTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.add_circle_outline,
-                    color: Color(0xFF1A535C)),
+                    color: Color(0xFF6366F1)),
                 SizedBox(width: 8),
                 Text(
                   'Create New Group Map',
                   style: TextStyle(
-                    color: Color(0xFF1A535C),
+                    color: Color(0xFF6366F1),
                     fontWeight: FontWeight.w700,
                     fontSize: 15,
                   ),

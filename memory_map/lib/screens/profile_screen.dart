@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
         final recentActivity = allVisits.take(5).toList();
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF7F3E9),
+          backgroundColor: const Color(0xFFF8FAFC),
           body: CustomScrollView(
             slivers: [
               // Editorial Header
@@ -51,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 18,
-                          color: Color(0xFF1A1A2E),
+                          color: Color(0xFF1E293B),
                         ),
                       ),
                       const Spacer(),
@@ -95,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 18,
-                          color: Color(0xFF1A1A2E),
+                          color: Color(0xFF1E293B),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -103,28 +103,28 @@ class ProfileScreen extends StatelessWidget {
                         label: 'Cafés in BGC',
                         emoji: '☕',
                         progress: 0.34,
-                        color: const Color(0xFFD2691E),
+                        color: const Color(0xFFF97316),
                       ),
                       const SizedBox(height: 10),
                       _ProgressBar(
                         label: 'Restaurants in Makati',
                         emoji: '🍽️',
                         progress: 0.55,
-                        color: const Color(0xFFE74C3C),
+                        color: const Color(0xFFEF4444),
                       ),
                       const SizedBox(height: 10),
                       _ProgressBar(
                         label: 'Bars in Poblacion',
                         emoji: '🍻',
                         progress: 0.28,
-                        color: const Color(0xFFF39C12),
+                        color: const Color(0xFFF59E0B),
                       ),
                       const SizedBox(height: 10),
                       _ProgressBar(
                         label: 'Parks in QC',
                         emoji: '🌿',
                         progress: 0.18,
-                        color: const Color(0xFF27AE60),
+                        color: const Color(0xFF10B981),
                       ),
                     ],
                   ),
@@ -140,7 +140,7 @@ class ProfileScreen extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 18,
-                      color: Color(0xFF1A1A2E),
+                      color: Color(0xFF1E293B),
                     ),
                   ),
                 ),
@@ -174,7 +174,7 @@ class ProfileScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14,
-                                    color: Color(0xFF1A1A2E),
+                                    color: Color(0xFF1E293B),
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -247,7 +247,7 @@ class _ProfileHeader extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color(0xFF0A1628), Color(0xFF1A2744)],
+                  colors: [Color(0xFF0F172A), Color(0xFF1E1B4B)],
                 ),
               ),
               child: SafeArea(
@@ -265,12 +265,12 @@ class _ProfileHeader extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.settings_outlined,
+                              icon: const Icon(Icons.tune_rounded,
                                   color: Colors.white54),
                               onPressed: () {},
                             ),
                             IconButton(
-                              icon: const Icon(Icons.logout,
+                              icon: const Icon(Icons.logout_rounded,
                                   color: Colors.white70, size: 20),
                               onPressed: () async {
                                 await context.read<UserProvider>().signOut();
@@ -315,7 +315,7 @@ class _ProfileHeader extends StatelessWidget {
                     Text(
                       user.username,
                       style: const TextStyle(
-                        color: Color(0xFF8899BB),
+                        color: Color(0xFF94A3B8),
                         fontSize: 14,
                       ),
                     ),
@@ -336,11 +336,11 @@ class _ProfileHeader extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF39C12),
+                  color: const Color(0xFFF59E0B),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFF39C12).withValues(alpha: 0.4),
+                      color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -411,7 +411,7 @@ class _StatBox extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 28,
-              color: Color(0xFF1A535C),
+              color: Color(0xFF6366F1),
             ),
           ),
           const SizedBox(height: 4),
