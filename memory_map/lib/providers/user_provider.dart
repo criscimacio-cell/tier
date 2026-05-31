@@ -49,30 +49,30 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns null = fully logged in, '__confirm__' = confirmation email sent, else error.
   Future<String?> signUp(String name, String email, String password) async {
     try {
       final res = await SupabaseService().signUp(email, password, name);
-      if (res.user != null) {
-        final userId = res.user!.id;
-        final avatar = _pickEmoji(name);
-        await SupabaseService().upsertProfile(
-          userId,
-          name,
-          '@${name.toLowerCase().replaceAll(' ', '.')}',
-          avatar,
-        );
-        _user = AppUser(
-          id: userId,
-          name: name,
-          username: '@${name.toLowerCase().replaceAll(' ', '.')}',
-          avatarEmoji: avatar,
-          earnedBadgeIds: [],
-        );
-        _isLoggedIn = true;
-        notifyListeners();
-        return null; // null = success
+      if (res.user == null) return 'Sign up failed';
+      if (res.session == null) {
+        // Email confirmation required — profile will be created on first sign-in
+        return '__confirm__';
       }
-      return 'Sign up failed';
+      // Email confirmation disabled — immediately logged in
+      final userId = res.user!.id;
+      final avatar = _pickEmoji(name);
+      final username = '@${name.toLowerCase().replaceAll(' ', '.')}';
+      await SupabaseService().upsertProfile(userId, name, username, avatar);
+      _user = AppUser(
+        id: userId,
+        name: name,
+        username: username,
+        avatarEmoji: avatar,
+        earnedBadgeIds: [],
+      );
+      _isLoggedIn = true;
+      notifyListeners();
+      return null;
     } catch (e) {
       return e.toString();
     }
@@ -81,26 +81,28 @@ class UserProvider extends ChangeNotifier {
   Future<String?> signIn(String email, String password) async {
     try {
       final res = await SupabaseService().signIn(email, password);
-      if (res.user != null) {
-        final userId = res.user!.id;
-        final profile = await SupabaseService().getProfile(userId);
-        final name = profile?['name'] ?? email.split('@').first;
-        final username = profile?['username'] ?? '@user';
-        final avatar = profile?['avatar'] ?? '🌍';
-        final streak = profile?['streak'] ?? 0;
-        _user = AppUser(
-          id: userId,
-          name: name,
-          username: username,
-          avatarEmoji: avatar,
-          streak: streak,
-          earnedBadgeIds: [],
-        );
-        _isLoggedIn = true;
-        notifyListeners();
-        return null;
+      if (res.user == null) return 'Sign in failed';
+      final userId = res.user!.id;
+      var profile = await SupabaseService().getProfile(userId);
+      // Create profile on first login (e.g. after email confirmation)
+      if (profile == null) {
+        final name = res.user!.userMetadata?['name'] as String? ?? email.split('@').first;
+        final avatar = _pickEmoji(name);
+        final username = '@${name.toLowerCase().replaceAll(' ', '.')}';
+        await SupabaseService().upsertProfile(userId, name, username, avatar);
+        profile = {'name': name, 'username': username, 'avatar': avatar, 'streak': 0};
       }
-      return 'Sign in failed';
+      _user = AppUser(
+        id: userId,
+        name: profile['name'] ?? email.split('@').first,
+        username: profile['username'] ?? '@user',
+        avatarEmoji: profile['avatar'] ?? '🌍',
+        streak: profile['streak'] ?? 0,
+        earnedBadgeIds: [],
+      );
+      _isLoggedIn = true;
+      notifyListeners();
+      return null;
     } catch (e) {
       return e.toString();
     }

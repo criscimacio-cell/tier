@@ -64,20 +64,79 @@ class _LoginScreenState extends State<LoginScreen>
   void _signUp() async {
     if (!_signUpFormKey.currentState!.validate()) return;
     setState(() => _loading = true);
-    final error = await context.read<UserProvider>().signUp(
+    final result = await context.read<UserProvider>().signUp(
       _signUpNameCtrl.text.trim(),
       _signUpEmailCtrl.text.trim(),
       _signUpPasswordCtrl.text,
     );
     if (!mounted) return;
     setState(() => _loading = false);
-    if (error != null) {
+    if (result == '__confirm__') {
+      _showConfirmationDialog(_signUpEmailCtrl.text.trim());
+      return;
+    }
+    if (result != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error), backgroundColor: const Color(0xFFFF6B6B)),
+        SnackBar(content: Text(result), backgroundColor: const Color(0xFFFF6B6B)),
       );
       return;
     }
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const OnboardingScreen()));
+  }
+
+  void _showConfirmationDialog(String email) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A535C).withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(child: Text('📧', style: TextStyle(fontSize: 32))),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Check your email',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF1A1A2E)),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'We sent a confirmation link to\n$email\n\nClick the link to activate your account, then sign in.',
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600, height: 1.5),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _tabController.animateTo(0); // switch to Sign In tab
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFF1A535C),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: const Text('Go to Sign In', style: TextStyle(fontWeight: FontWeight.w700)),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
